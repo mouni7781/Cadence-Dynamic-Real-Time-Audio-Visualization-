@@ -62,7 +62,7 @@ async function getsongs(folder) {
     songs = []
     for (let index = 0; index < as.length; index++) {
         const element = as[index];
-        if (element.href.endsWith(".mp3")) {
+        if (element.href.endsWith(".mp3")) {           
             let decodedHref = decodeURIComponent(element.href);
             let songName = (decodedHref.split(`/${folder}/`)[1])
             if (songName) {
@@ -78,8 +78,8 @@ async function getsongs(folder) {
 async function populatesongs(songs) {
     let songul = document.querySelector(".songlist").getElementsByTagName("ul")[0]
     let songsHTML = "";
-    for (const song of songs) {
-        songsHTML += `<li><img class="invert " height="30px" src="Assets/svg/song/songui.svg" alt="">
+    for (const [index, song] of songs.entries()) {    
+        songsHTML += `<li style="animation-delay: ${index * 50}ms;><img class="invert " height="30px" src="Assets/svg/song/songui.svg" alt="">
                                     <div class="info">
                                         <div>${song.replaceAll("%20", " ")}</div>
                                         <div>Mouni</div>                                        
@@ -91,8 +91,8 @@ async function populatesongs(songs) {
                                         </div>
                                     </div>                              
          </li>`;
-        songul.innerHTML = songsHTML;
-    }
+        }
+    songul.innerHTML = songsHTML;
 
     // to play song by selecting from available window
     Array.from(document.querySelector(".songlist").getElementsByTagName("li")).forEach(e => {
@@ -104,13 +104,14 @@ async function populatesongs(songs) {
 // ************************************************************************************************** //
 async function displayCards(folder, container) {
     let tsongs = await getsongs(folder);
-    folder = folder.replace("songs/", "");
+    folder = folder.replace("Songs/", "");
     let card = document.querySelector(container).getElementsByTagName("div")[0]
     let cardsHTML = "";
-    for (const song of tsongs) {
+    for (const [index, song] of tsongs.entries()) {
+    // for (const song of tsongs) {
         let imgso = (song.replaceAll("%20", " ")).replace(regex, ".")
         const imageSrc = songImageMap[imgso] || defaultImage;
-        cardsHTML += `<div data-folder="${folder}" class="card rounded click">
+        cardsHTML += `<div data-folder="${folder}" class="card rounded click style="animation-delay: ${index * 70}ms;">
                                     <div class="card-elements">
                                         <div class="play-btn profile-rounded flex items-center justify-center" onclick="playmusic('${song}') ">
                                             <img src="Assets/svg/other/play.svg" height="24px" width="24px" alt="">
@@ -133,7 +134,7 @@ async function displayCards(folder, container) {
 // ************************************************************************************************** //
 async function getAlbumFolders(folderPath) {
     const jsonFilePath = `${folderPath}/info.json`;
-    try {
+    try {        
         const response = await fetch(jsonFilePath);
         if (!response.ok) {
             throw new Error(`Server could not find or load the file: ${jsonFilePath}`);
@@ -151,6 +152,7 @@ async function displayalbums(folder, container, cls) {
     let card = document.querySelector(container).getElementsByTagName("div")[0]
     card.innerHTML = "";
     for (const album of albumFolders) {
+        console.log(album.href);
         const imageSrc = album.image || defaultImage;
         card.innerHTML = card.innerHTML + `<div data-folder="${album.path}" class="card rounded click">
                                     <div  class="card-elements ">
@@ -182,31 +184,33 @@ const playmusic = (musictrack, pause = false) => {
     document.querySelector(".songinfo").innerHTML = decodeURI(musictrack)
     document.querySelector(".songtime").querySelector(".current-time").innerHTML = "00:00";
 }
-
+function init_visualizer(){    
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                source = audioContext.createMediaElementSource(currsong);
+                analyser = audioContext.createAnalyser();
+                source.connect(analyser);
+                analyser.connect(audioContext.destination);
+                analyser.fftSize = 256;
+                const bufferLength = analyser.frequencyBinCount;
+                dataArray = new Uint8Array(bufferLength);
+                canvas = document.getElementById('visualizerCanvas');
+                canvasCtx = canvas.getContext('2d');
+                drawVisualizer();
+                visualizerInitialized = true;
+}
 // ************************************************************************************************** //
 async function main() {
-    await displayCards("songs/TrendSongs", ".sect-a .song-row-container");
-    await displayalbums("songs/secb", ".sect-b .song-row-container", "profile-rounded");
-    await displayalbums("songs/Pas", ".sect-c .song-row-container", "img-rounded");
-    await getsongs("songs/TrendSongs")
+    await displayCards("Songs/TrendSongs", ".sect-a .song-row-container");
+    await displayalbums("Songs/secb", ".sect-b .song-row-container", "profile-rounded");
+    await displayalbums("Songs/Pas", ".sect-c .song-row-container", "img-rounded");
+    await getsongs("Songs/TrendSongs")
     playmusic(songs[0], true)
 
 
     // to play song from song bar
     play.addEventListener("click", () => {
         if (!visualizerInitialized) {
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            source = audioContext.createMediaElementSource(currsong);
-            analyser = audioContext.createAnalyser();
-            source.connect(analyser);
-            analyser.connect(audioContext.destination);
-            analyser.fftSize = 256;
-            const bufferLength = analyser.frequencyBinCount;
-            dataArray = new Uint8Array(bufferLength);
-            canvas = document.getElementById('visualizerCanvas');
-            canvasCtx = canvas.getContext('2d');
-            drawVisualizer();
-            visualizerInitialized = true;
+            init_visualizer();
         }
         if (currsong.paused) {
             currsong.play();
@@ -279,11 +283,17 @@ async function main() {
     Array.from(document.getElementsByClassName("card")).forEach(e => {
         e.addEventListener("click", async items => {
             if (items.currentTarget.dataset.folder == "TrendSongs") {
-                songs = await getsongs(`songs/${items.currentTarget.dataset.folder}`)
+                if (!visualizerInitialized) {
+                        init_visualizer();
+                }
+                songs = await getsongs(`Songs/${items.currentTarget.dataset.folder}`)
                 console.log("This is the path you want to ignore playing the first song.");
             } else {
                 songs = await getsongs(`songs/${items.currentTarget.dataset.folder}`)
                 if (songs && songs.length > 0) {
+                    if (!visualizerInitialized) {
+                        init_visualizer();
+                    }
                     playmusic(songs[0]);
                 }
             }
