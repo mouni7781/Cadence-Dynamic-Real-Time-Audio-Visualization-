@@ -1,8 +1,8 @@
 <div align="center">
 
-# 🎵 Spotify Clone with Real-Time Audio Visualization 🎵
+# 🎵 Web Player with Real-Time Audio Visualization 🎵
 
-A pixel-perfect, framework-free replica of the Spotify web player, built to showcase core front-end skills and advanced browser API integration.
+A pixel-perfect, framework-free  web player, built to showcase core front-end skills and advanced browser API integration.
 
 </div>
 
@@ -12,14 +12,14 @@ https://github.com/user-attachments/assets/1cd46a75-61b9-4292-a33c-1824e040d874
 
 ---
 ## ✨ About The Project
-This project is a high-fidelity, front-end clone of the Spotify web player. It was built from the ground up using vanilla JavaScript, HTML5, and CSS3 to demonstrate a strong understanding of fundamental web technologies without reliance on modern frameworks.
+This project is a high-fidelity, front-end based web player. It was built from the ground up using vanilla JavaScript, HTML5, and CSS3 to demonstrate a strong understanding of fundamental web technologies without reliance on modern frameworks.
 
 The goal was not just to replicate the look and feel but to engineer core functionalities like dynamic content loading, a fully interactive music player, and a live search feature. The centerpiece of this project is a real-time audio visualizer that uses the Web Audio API and HTML5 Canvas to create an engaging and dynamic user experience that syncs with the music.
 
 ---
 
 ## 🚀 Key Features
-- 🎨 **Pixel-Perfect & Responsive UI**: Meticulously crafted to match Spotify's design. The layout is fully responsive, providing a seamless experience across 5+ breakpoints from mobile to desktop.
+- 🎨 **Pixel-Perfect & Responsive UI**: Meticulously crafted to match popular music player design. The layout is fully responsive, providing a seamless experience across 5+ breakpoints from mobile to desktop.
 - ▶️ **Full-Fledged Music Player**: Complete playback functionality including play, pause, next/previous, a draggable seek bar, and volume controls.
 - 🎶 **Dynamic Content Loading**: Asynchronously fetches and displays song and album data from local project files, populating the UI without page reloads.
 - 🔍 **Live Search Functionality**: Instantly filters songs and albums in real-time as the user types in the search bar.
@@ -74,7 +74,7 @@ To get a local copy up and running, follow these simple steps.
 
 ### 1. Clone the repository:
 ```sh
-git clone [https://github.com/mouni7781/Dynamic-Spotify-Web-Player-with-Real-Time-Audio-Visualization.git](https://github.com/mouni7781/Dynamic-Spotify-Web-Player-with-Real-Time-Audio-Visualization.git)
+git clone [https://github.com/mouni7781/Cadence-Dynamic-Real-Time-Audio-Visualization-.git](https://github.com/mouni7781/Cadence-Dynamic-Real-Time-Audio-Visualization-.git)
 ```
 
 ### 2. Navigate to the project directory:
