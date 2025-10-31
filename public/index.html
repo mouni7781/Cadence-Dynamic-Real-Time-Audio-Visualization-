@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Web Player: Free Music for everyone</title>
+    <meta name="description" content="Experience the world of music with this Spotify web player clone. Stream trending songs, discover new artists, and enjoy your favorite playlists right in your browser.">   
+    <meta name="keywords" content="Spotify, music, streaming, web player, podcasts, playlist, songs, artists, educational project">
+    <meta name="author" content="Mouni Prakash"> <meta property="og:title" content="Spotify - Web Player Clone">
+    <meta property="og:description" content="A fully functional web player for streaming music and discovering new artists.">
+    <meta property="og:type" content="website">
+    
+    <link rel="stylesheet" href="CSS/Nav-bar.css">
+    <link rel="stylesheet" href="CSS/main.css">
+    <link rel="stylesheet" href="CSS/left.css">
+    <link rel="stylesheet" href="CSS/utility.css">  
+    <link rel="stylesheet" href="CSS/C-Scroll.css">
+    <link rel="stylesheet" href="CSS/Songs.css">
+    <link rel="stylesheet" href="CSS/mobile.css">
+    <link rel="stylesheet" href="CSS/responsive.css">
+    
+</head>
+
+<body class="body">
+    <!-- <div class="gh-disclaimer-banner">
+      <strong>DISCLAIMER:</strong> THIS PAGE WAS MADE AS A PERSONAL EDUCATIONAL PROJECT. This is NOT the official site of the company or brand identified on the page. The creator of this page is NOT affiliated with the company or brand in any way. This page is a personal project made in connection with an educational exercise.
+    </div> -->
+    <nav class="nav-cont flex  items-center z-up">
+        <div class="left-nav flex  items-center">
+            <img id="logo" class="invert" src="/Assets/svg/logo.svg" alt="">
+            <div class="flex items-center">
+                <button class="btn-home click">
+                    <span id="Home" class="flex items-center justify-center"><img class="invert"
+                            src="/Assets/svg/other/Homebtn.svg" alt=""></span>
+                </button>
+                <div class="search-bar flex items-center ">
+                    <button class="btn-search click">
+                        <span id="Home" class="flex items-center justify-center"><img class="invert"
+                                src="/Assets/svg/other/search.svg" alt=""></span>
+                    </button>
+                    <div class="inp flex items-center">
+                        <input id="search-ph" type="text" placeholder="What do you want to play?">
+                    </div>
+                    <button class="btn-browse flex items-center click">
+                        <div class="line"></div>
+                        <span id="Home" class="flex items-center justify-center"><img src="/Assets/svg/other/browse.svg"
+                                alt=""></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="right-nav flex items-center">
+            <div class="flex r1">
+                <button class="click f716">Premium</button>
+                <button class="click f716">Support</button>
+                <button class="click f716">Download</button>
+
+            </div>
+            <div class="line r2 "></div>
+            <div class="rn flex items-center justify-center r3">
+                <a class="flex justify-center items-center f714" href="https://apps.microsoft.com/store/detail/9NCBCSZSJRSB?launch=true&mode=mini&cid=spotifyweb-store-button" target="_blank">
+                    <span class="flex items-center" aria-hidden="true">
+                        <img class="invert" src="/Assets/svg/other/download.svg" alt="">
+                    </span>
+                    <span class="color-light flex items-center ">Install App</span></a>
+                <button class="click f714">Sign up</button>
+                <button class="f716 click" data-encore-id="buttonPrimary" class="">
+                    <span class="">Log in</span>
+                </button>
+
+            </div>
+            <div class="r4 flex items-center justify-center">
+                <button class="f716 click" data-encore-id="buttonPrimary" class="">                 
+                        <span  class="">Open App</span>
+                </button>
+                <div class="slider flex items-center justify-center">
+                    <img class="ham1 invert" src="/Assets/svg/hamburger.svg" height="35px" alt="">
+                    <img class="close" src="/Assets/svg/close.svg" height="35px" alt="">
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="divider"></div>
+    <div class="main-cont flex">
+        <nav class="left rounded  ">
+            <div class="lib flex f716 bg-ash z-up">
+                <div class="lib-1 flex items-center">
+                    <h1 class="f716">Your Library</h1>
+                    <button class="Add click">
+                        <span>
+                            <img class="invert" src="/Assets/svg/other/Add.svg" alt="Add Library">
+                        </span>
+                    </button>
+                </div>
+
+            </div>
+
+            <div class="playlist-container flex">
+                <div class="play-list flex justify-center bg-ash custom-scrollbar">
+                    <section class="list-section-song flex bg-lash rounded">
+                        <h2>Available Songs</h2>
+
+                        <div class="songlist ">
+                            <ul>
+
+                            </ul>
+                        </div>
+                        <div class="custom-scrollbar-track">
+                            <div class="custom-scrollbar-thumb"></div>
+                        </div>
+
+                    </section>
+
+                    <section class="list-section flex bg-lash rounded">
+                        <div class="txt flex">
+                            <span class="f716">Create your first playlist</span>
+                            <span class="f414">It's easy, we'll help you</span>
+                        </div>
+                        <div class="btn-lis flex">
+                            <button class="f716 click">
+                                <span>Create playlist</span>
+                            </button>
+                        </div>
+                    </section>
+                    <section class="list-section flex  bg-lash rounded">
+                        <div class="txt flex">
+                            <span>Let's find some podcasts to follow</span>
+                            <span>We'll keep you updated on new episodes</span>
+                        </div>
+                        <div class="btn-lis flex">
+                            <a class="drag f714 click" draggable="false" href="/genre/podcasts-web">
+                                <span>Browse podcasts</span>
+                            </a>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <footer class="flex bg-ash">
+                <div class="links flex">
+                    <div class="sub-link">
+                        <div><a class="f11w400 link-txt "
+                                href="https://www.spotify.com/in-en/legal/"><span>Legal</span></a>
+                        </div>
+                        <div><a class="f11w400 link-txt"
+                                href="https://www.spotify.com/in-en/safetyandprivacy/"><span>Safety
+                                    &amp; Privacy Center</span></a></div>
+                        <div> <a class="f11w400 link-txt"
+                                href="https://www.spotify.com/in-en/legal/privacy-policy/"><span>Privacy
+                                    Policy<span></a></div>
+                        <div><a class="f11w400 link-txt"
+                                href="https://www.spotify.com/in-en/legal/cookies-policy/"><span>Cookies</span>
+                            </a>
+                        </div>
+                        <div><a class="f11w400 link-txt"
+                                href="https://www.spotify.com/in-en/legal/privacy-policy/#s3"><span>About Ads</span></a>
+                        </div>
+                        <div><a class="f11w400 link-txt"
+                                href="https://www.spotify.com/in-en/accessibility/"><span>Accessibility</span></a></div>
+                    </div>
+                    <a class="laslink" href="https://www.spotify.com/legal/cookies-policy/" target="_blank"
+                        rel="noopener"><span>Cookies</span></a>
+
+                </div>
+
+                <div class="lang flex items-center">
+                    <button class="flex items-center ">
+                        <span aria-hidden="true">
+                            <img class="invert" src="/Assets/svg/other/Language.svg" alt="">
+                        </span>
+                        English
+                    </button>
+                </div>
+            </footer>
+        </nav>
+        <label for="menu-toggle" class="overlay"></label>
+
+
+        <div class="right rounded">
+            <div class="S"></div>
+            <div class="ham-cont ">
+                <img class="ham invert" src="/Assets/svg/hamburger.svg" height="35px" alt="">
+                <img class="close" src="/Assets/svg/close.svg" height="35px" alt="">
+            </div>
+            <div class="right-content ">
+                <div class="right-main flex">
+                    <div id="searchResultsContainer" class="hidden">
+                        <div class="trend flex">
+                            <h2>Search Results</h2>
+                        </div>
+                        <div class="song-row-container">
+                            <div id="searchResultsGrid" class="cardcont flex">
+                            </div>
+                        </div>
+                    </div>
+                    <section class="sect-a">
+                        <div class="trend flex">
+                            <div class="">
+                                <h2 class="">
+                                    <a class="hover-underline " href="">Trending songs</a>
+                                </h2>
+                            </div>
+                            <div class="">
+                                <a class="f414 hover-underline cfont-ash " href="/section/0JQ5DB5E8N831KzFzsBBQ2">
+                                    Show all
+                                </a>
+                            </div>
+                        </div>
+                        <div class="song-row-container ">
+                            <div class="cardcont  flex">
+                            </div>
+                            <div class="left-arrow arrow">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="1 1 24 24" width="26" height="28"
+                                    color="#0ffffff" fill="none">
+                                    <path d="M15 6C15 6 9.00001 10.4189 9 12C8.99999 13.5812 15 18 15 18"
+                                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                        stroke-linejoin="round"></path>
+                                </svg>
+                            </div>
+                            <div class="right-arrow arrow">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 1 24 24" width="26" height="28"
+                                    color="#0ffffff" fill="none">
+                                    <path d="M9.00005 6C9.00005 6 15 10.4189 15 12C15 13.5812 9 18 9 18"
+                                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                        stroke-linejoin="round"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="sect-b">
+                        <div class="trend flex">
+                            <div class="">
+                                <h2 class="">
+                                    <a class="hover-underline " href="">Popular artists</a>
+                                </h2>
+                            </div>
+                            <div class="">
+                                <a class="f414 hover-underline cfont-ash " href="/section/0JQ5DB5E8N831KzFzsBBQ2">
+                                    Show all
+                                </a>
+                            </div>
+                        </div>
+                        <div class="song-row-container ">
+                            <div class="cardcont  flex">
+
+                            </div>
+                            <div class="left-arrow arrow">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="1 1 24 24" width="26" height="28"
+                                    color="#0ffffff" fill="none">
+                                    <path d="M15 6C15 6 9.00001 10.4189 9 12C8.99999 13.5812 15 18 15 18"
+                                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                        stroke-linejoin="round"></path>
+                                </svg>
+                            </div>
+                            <div class="right-arrow arrow">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 1 24 24" width="26" height="28"
+                                    color="#0ffffff" fill="none">
+                                    <path d="M9.00005 6C9.00005 6 15 10.4189 15 12C15 13.5812 9 18 9 18"
+                                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                        stroke-linejoin="round"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="sect-c">
+                        <div class="trend flex">
+                            <div class="">
+                                <h2 class="">
+                                    <a class="hover-underline " href="">Popular albums and singles</a>
+                                </h2>
+                            </div>
+                            <div class="">
+                                <a class="f414 hover-underline cfont-ash " href="/section/0JQ5DB5E8N831KzFzsBBQ2">
+                                    Show all
+                                </a>
+                            </div>
+                        </div>
+                        <div class="song-row-container ">
+                            <div class="cardcont  flex">
+                            </div>
+                            <div class="left-arrow arrow">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="1 1 24 24" width="26" height="28"
+                                    color="#0ffffff" fill="none">
+                                    <path d="M15 6C15 6 9.00001 10.4189 9 12C8.99999 13.5812 15 18 15 18"
+                                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                        stroke-linejoin="round"></path>
+                                </svg>
+                            </div>
+                            <div class="right-arrow arrow">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 1 24 24" width="26" height="28"
+                                    color="#0ffffff" fill="none">
+                                    <path d="M9.00005 6C9.00005 6 15 10.4189 15 12C15 13.5812 9 18 9 18"
+                                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                        stroke-linejoin="round"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <div class="right-footer-cont">
+                <hr class="">
+                <div class="right-ftr-cont flex">
+                    <div class="margin" style="margin-top: 32px;">
+                        <nav class="nav-box flex">
+                            <div class="lis-cont flex justify-center">
+
+                                <ul class="list1 flex">
+                                    <p class="f716">Company</p>
+                                    <a href="" class="f416 hover-underline text-deco">About</a>
+                                    <a href="" class="f416 hover-underline text-deco">Jobs</a>
+                                    <a href="" class="f416 hover-underline text-deco">For the Record</a>
+                                </ul>
+                                <ul class="list1 flex">
+                                    <p class="f716">Communities</p>
+                                    <a href="" class="f416 hover-underline text-deco">For Artists</a>
+                                    <a href="" class="f416 hover-underline text-deco">Developers</a>
+                                    <a href="" class="f416 hover-underline text-deco">Advertising</a>
+                                    <a href="" class="f416 hover-underline text-deco">Investors</a>
+                                    <a href="" class="f416 hover-underline text-deco">Vendors</a>
+                                </ul>
+                                <ul class="list1 flex">
+                                    <p class="f716">Useful links</p>
+                                    <a href="" class="f416 hover-underline text-deco">Support</a>
+                                    <a href="" class="f416 hover-underline text-deco">Free Mobile App</a>
+                                    <a href="" class="f416 hover-underline text-deco">Popular by Country</a>
+                                    <a href="" class="f416 hover-underline text-deco">Import your music</a>
+                                </ul>
+                                <ul class="list1 flex">
+                                    <p class="f716">Music Player Plans</p>
+                                    <a href="" class="f416 hover-underline text-deco">Premium Individual</a>
+                                    <a href="" class="f416 hover-underline text-deco">Premium Duo</a>
+                                    <a href="" class="f416 hover-underline text-deco">Premium Family</a>
+                                    <a href="" class="f416 hover-underline text-deco">Premium Student</a>
+                                    <a href="" class="f416 hover-underline text-deco">Spotify Free</a>
+                                </ul>
+                            </div>
+                            <div class="socials flex">
+                                <div class="scont flex items-center justify-center ">
+                                    <a href="https://www.instagram.com/mouniprakashh/" target="_blank"
+                                        rel="noopener noreferrer" class="">
+                                        <img class="invert" src="/Assets/svg/Socials/ingram.svg" alt="">
+                                        </svg>
+                                </div>
+                                <div class="scont flex items-center justify-center">
+                                    <a href="https://x.com/MouniPrakash4?t=fEFGM-yNEm9_bC-mo5ifsg&s=09" target="_blank" rel="noopener noreferrer"
+                                        class="">
+                                        <img class="invert" src="/Assets/svg/Socials/twitt.svg" alt="">
+                                        </svg>
+                                </div>
+                                <div class="scont flex items-center justify-center">
+                                    <a href="https://www.linkedin.com/in/mouni-prakash-reddy-2091a5258/" target="_blank" rel="noopener noreferrer"
+                                        class="">
+                                        <img class="invert" src="/Assets/svg/Socials/linkdin.svg" alt="">
+                                        </svg>
+                                </div>
+                                </a>
+                            </div>
+                        </nav>
+                        <hr class="seplin">
+                        <p class="copyright f414" data-encore-id="type" class="">© 2025 Mouniprakash</p>
+                    </div>
+                </div>
+            </div>
+            <div class="player flex items-center justify-center ">
+                <canvas id="visualizerCanvas"></canvas>
+                <div class="player-main flex items-center">
+                    <div class="songinfo"></div>
+                    <div class="songbtns flex items-center justify-center ">
+
+                        <div class="prev icon-container profile-rounded flex items-center justify-center">
+                            <img src="/Assets/svg/Play-btns/prev.svg" alt="">
+                        </div>
+
+                        <div class="plybtn profile-rounded flex items-center justify-center">
+                            <img src="/Assets/svg/other/play.svg" height="16px" width="16px" alt="">
+                        </div>
+
+                        <div class="next icon-container-r profile-rounded flex items-center justify-center">
+                            <img src="/Assets/svg/Play-btns/nxt.svg" alt="">
+                        </div>
+                    </div>
+                    <div class="placeholder"></div>
+                    <div class="volume-cont flex items-center justify-center">
+                        <img src="/Assets/svg/Play-btns/volume.svg" alt="">
+                        <div class="range">
+                            <input type="range" name="volume" id="vol-range">
+                        </div>
+                    </div>
+                </div>
+                <div class="seek-cont flex items-center">
+                    <div class="songtime">
+                        <span class="current-time">1:23</span>
+                        <span>/</span>
+                        <span class="total-duration">3:45</span>
+                    </div>
+                    <div class="seekbar">
+                        <div class="seek"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="mobile-lay flex ">
+                <div class="home pad flex items-center justify-center">
+                    <button class="btn-home click">
+                        <img class="invert" src="/Assets/svg/other/Homebtn.svg" height="25px" width="25px" alt="">
+                    </button>
+                    <span>Home</span>
+                </div>
+                <div class="search pad flex items-center justify-center">
+                    <button class="btn-search click">
+                        <img class="invert" src="/Assets/svg/other/search.svg" height="25px" width="25px" alt="">
+                    </button>
+                    <span>Search</span>
+                </div>
+                <div class="search pad flex items-center justify-center">
+                    <button class="btn-search click">
+                        <img class="invert" src="/Assets/svg/other/search.svg" height="25px" width="25px" alt="">
+                    </button>
+                    <span>Your Library</span>
+                </div>
+                <div class="Prem pad flex items-center justify-center">
+                    <button class="btn-prem click">
+                        <img class="invert" src="/Assets/svg/spot.svg" height="25px" width="25px" alt=""> </button>
+                    <span>Premium</span>
+                </div>
+            </div>
+            <div class="banner-cont">
+                <div class="cont ">
+                    <div class="banner flex items-center">
+                        <div class="flex rtext ">
+                            <p class="f714" data-encore-id="text">Preview of Music PLayer</p>
+                            <p class="f416" data-encore-id="text">Sign up to get unlimited songs
+                                and podcasts with occasional ads. No credit card needed.</p>
+                        </div>
+                        <button class="f716 click" data-encore-id="buttonPrimary" class="">
+                            <span class="">Sign up free</span>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
