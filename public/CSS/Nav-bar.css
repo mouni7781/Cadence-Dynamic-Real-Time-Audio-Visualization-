@@ -199,3 +199,9 @@ body {
     border-radius: 9999px;
     color: black;
 }
+.dbord{
+    background-color: darkorchid;
+    outline: none;
+    border: none;
+    box-shadow: none;
+}

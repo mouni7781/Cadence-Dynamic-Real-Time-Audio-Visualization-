@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Player Analytics</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <link rel="stylesheet" href="/analytics.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Music Analytics Dashboard</h1>
+
+        <div class="controls">
+            <button id="range-week" class="active">Last Week</button>
+            <button id="range-month">Last Month</button>
+            <button id="range-year">Last Year</button>
+            <button id="range-all">All Time</button>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Plays</h3>
+                <p id="stats-total-plays">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Total Hours Listened</h3>
+                <p id="stats-total-hours">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Unique Songs</h3>
+                <p id="stats-unique-songs">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Completion Rate</h3>
+                <p id="stats-completion-rate">0%</p>
+            </div>
+        </div>
+
+        <div class="data-section">
+            <div class="list-card">
+                <h2>Top Songs</h2>
+                <ol id="top-songs-list">
+                    <li>Loading...</li>
+                </ol>
+            </div>
+            <div class="chart-card">
+                <h2>Daily Plays</h2>
+                <div class="chart-container">
+                    <canvas id="daily-stats-chart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/analytics.js"></script>
+</body>
+
+</html>

@@ -21,6 +21,121 @@ const songImageMap = {
 const defaultImage = "https://placehold.co/168x168/191919/999999?text=Cover";
 const regex = /\s-\s.*?\./;
 
+
+class MusicAnalytics {
+    constructor() {
+        this.sessionId = this.generateSessionId();
+        this.currentPlay = null;
+        this.playStartTime = null;
+    }
+
+    generateSessionId() {
+        return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    }
+
+    // Track song play event
+    trackPlay(songName, artist = 'Unknown') {
+        this.currentPlay = {
+            song: songName,
+            artist: artist,
+            startTime: Date.now(),
+            completed: false
+        };
+        this.playStartTime = Date.now();
+
+        this.sendEvent({
+            type: 'play',
+            song: songName,
+            artist: artist,
+            timestamp: new Date().toISOString(),
+            sessionId: this.sessionId
+        });
+    }
+
+    // Track when song completes
+    trackComplete(songName) {
+        if (!this.currentPlay) return;
+        
+        const duration = Date.now() - this.playStartTime;
+        
+        this.sendEvent({
+            type: 'complete',
+            song: songName,
+            duration: duration,
+            timestamp: new Date().toISOString(),
+            sessionId: this.sessionId
+        });
+        this.currentPlay = null;
+       
+        this.playStartTime = null;
+    }
+
+    // Track song skip
+    trackSkip(songName) {
+        if (!this.currentPlay) return;
+        
+        const duration = Date.now() - this.playStartTime;
+        
+        this.sendEvent({
+            type: 'skip',
+            song: songName,
+            duration: duration,
+            timestamp: new Date().toISOString(),
+            sessionId: this.sessionId
+        });
+        this.currentPlay = null;
+        this.playStartTime = null;
+    }
+
+    // Track pause
+    trackPause(songName) {
+        if (!this.currentPlay) return;
+        
+        const duration = Date.now() - this.playStartTime;
+        
+        this.sendEvent({
+            type: 'pause',
+            song: songName,
+            duration: duration,
+            timestamp: new Date().toISOString(),
+            sessionId: this.sessionId
+        });
+        this.currentPlay = null;
+        this.playStartTime = null;
+    }
+
+    // Send event to backend
+    async sendEvent(eventData) {
+        try {
+            const response = await fetch('/api/analytics/track', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(eventData)
+            });
+
+            if (!response.ok) {
+                console.error('Failed to track event');
+            }
+        } catch (error) {
+            console.error('Analytics error:', error);
+        }
+    }
+
+    // Get user statistics
+    async getStats(timeRange = 'week') {
+        try {
+            const response = await fetch(`/api/analytics/stats?range=${timeRange}&session=${this.sessionId}`);
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Failed to fetch stats:', error);
+            return null;
+        }
+    }
+}
+const analytics = new MusicAnalytics();
 // ************************************************************************************************** //
 function formatTime(totalSeconds) {
     if (isNaN(totalSeconds) || totalSeconds < 0) {
@@ -218,12 +333,15 @@ async function main() {
         if (!visualizerInitialized) {
             init_visualizer();
         }
+        const songName = decodeURIComponent(currsong.src.split("/").slice(-1)[0]);
         if (currsong.paused) {
             currsong.play();
             icon.src = "Assets/svg/Play-btns/pause.svg"
+            analytics.trackPlay(songName, 'Artist Name');
         } else {
             currsong.pause();
             icon.src = "Assets/svg/other/play.svg"
+            analytics.trackPause(songName);
         }
     });
     
@@ -233,11 +351,13 @@ async function main() {
         if (index - 1 >= 0) {
             playmusic(songs[index - 1])
         }
+        analytics.trackSkip(currentSongName);
     });
     
     // Making next Button
     next.addEventListener("click", () => {       
         let index = songs.indexOf(decodeURIComponent(currsong.src.split("/").slice(-1)[0]));
+        analytics.trackSkip(currentSongName);
         if (index + 1 < songs.length) {
             playmusic(songs[index + 1])
         } else {
@@ -367,6 +487,17 @@ async function main() {
                 cardContainer.scrollLeft -= 200;
             }
         });
+    });
+    currsong.addEventListener('ended', () => {
+        const songName = decodeURIComponent(currsong.src.split("/").slice(-1)[0]);
+        analytics.trackComplete(songName);
+        
+        let index = songs.indexOf(songName);
+        if (index + 1 < songs.length) {
+            playmusic(songs[index + 1]);
+        } else {
+            playmusic(songs[0]); 
+        }
     });
 }
 main()

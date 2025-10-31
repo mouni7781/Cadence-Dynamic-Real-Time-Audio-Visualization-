@@ -1,0 +1,240 @@
+[
+  {
+    "type": "pause",
+    "song": "For A Reason - Karan Aujla.mp3",
+    "duration": 5800,
+    "timestamp": "2025-10-31T15:57:16.370Z",
+    "sessionId": "session_1761926188708_k2j5mw7qd"
+  },
+  {
+    "type": "play",
+    "song": "Azul - Guru Randhawa.mp3",
+    "artist": "Artist Name",
+    "timestamp": "2025-10-31T16:02:55.123Z",
+    "sessionId": "session_1761926553147_g1fc714qh"
+  },
+  {
+    "type": "pause",
+    "song": "Azul - Guru Randhawa.mp3",
+    "duration": 1447,
+    "timestamp": "2025-10-31T16:02:56.570Z",
+    "sessionId": "session_1761926553147_g1fc714qh"
+  },
+  {
+    "type": "pause",
+    "song": "Azul - Guru Randhawa.mp3",
+    "duration": 16352,
+    "timestamp": "2025-10-31T16:03:11.475Z",
+    "sessionId": "session_1761926553147_g1fc714qh"
+  },
+  {
+    "type": "play",
+    "song": "52 Bars.mp3",
+    "artist": "Artist Name",
+    "timestamp": "2025-10-31T16:03:13.415Z",
+    "sessionId": "session_1761926553147_g1fc714qh"
+  },
+  {
+    "type": "skip",
+    "song": "Azul - Guru Randhawa.mp3",
+    "duration": 18291,
+    "timestamp": "2025-10-31T16:03:13.414Z",
+    "sessionId": "session_1761926553147_g1fc714qh"
+  },
+  {
+    "type": "play",
+    "song": "Agar Tum Saath Ho - Tamasha.mp3",
+    "artist": "Artist Name",
+    "timestamp": "2025-10-31T16:03:39.836Z",
+    "sessionId": "session_1761926553147_g1fc714qh"
+  },
+  {
+    "type": "play",
+    "song": "Tainu Khabar Nahi.mp3",
+    "artist": "Artist Name",
+    "timestamp": "2025-10-31T16:03:47.634Z",
+    "sessionId": "session_1761926553147_g1fc714qh"
+  },
+  {
+    "type": "play",
+    "song": "Azul - Guru Randhawa.mp3",
+    "artist": "Artist Name",
+    "timestamp": "2025-10-31T16:05:08.554Z",
+    "sessionId": "session_1761926553147_g1fc714qh"
+  },
+  {
+    "type": "play",
+    "song": "52 Bars.mp3",
+    "artist": "Artist Name",
+    "timestamp": "2025-10-31T16:18:48.600Z",
+    "sessionId": "session_1761927501736_e1ne99xla"
+  },
+  {
+    "type": "pause",
+    "song": "52 Bars.mp3",
+    "duration": 4473,
+    "timestamp": "2025-10-31T16:18:53.073Z",
+    "sessionId": "session_1761927501736_e1ne99xla"
+  },
+  {
+    "type": "pause",
+    "song": "52 Bars.mp3",
+    "duration": 5822,
+    "timestamp": "2025-10-31T16:18:54.422Z",
+    "sessionId": "session_1761927501736_e1ne99xla"
+  },
+  {
+    "type": "play",
+    "song": "Tainu Khabar Nahi.mp3",
+    "artist": "Artist Name",
+    "timestamp": "2025-10-31T16:19:04.127Z",
+    "sessionId": "session_1761927501736_e1ne99xla"
+  },
+  {
+    "type": "play",
+    "song": "Aise Kyun - Mismatched.mp3",
+    "artist": "Artist Name",
+    "timestamp": "2025-10-31T16:19:12.848Z",
+    "sessionId": "session_1761927501736_e1ne99xla"
+  },
+  {
+    "type": "pause",
+    "song": "Aise Kyun - Mismatched.mp3",
+    "duration": 2034,
+    "timestamp": "2025-10-31T16:19:14.882Z",
+    "sessionId": "session_1761927501736_e1ne99xla"
+  },
+  {
+    "type": "pause",
+    "song": "Aise Kyun - Mismatched.mp3",
+    "duration": 2703,
+    "timestamp": "2025-10-31T16:19:15.551Z",
+    "sessionId": "session_1761927501736_e1ne99xla"
+  },
+  {
+    "type": "complete",
+    "song": "Aise Kyun - Mismatched.mp3",
+    "duration": 329837,
+    "timestamp": "2025-10-31T16:24:42.685Z",
+    "sessionId": "session_1761927501736_e1ne99xla"
+  },
+  {
+    "type": "play",
+    "song": "Finding Her - Kushagra.mp3",
+    "artist": "Artist Name",
+    "timestamp": "2025-10-31T16:26:37.478Z",
+    "sessionId": "session_1761927501736_e1ne99xla"
+  },
+  {
+    "type": "complete",
+    "song": "Finding Her - Kushagra.mp3",
+    "duration": 207132,
+    "timestamp": "2025-10-31T16:30:04.610Z",
+    "sessionId": "session_1761927501736_e1ne99xla"
+  },
+  {
+    "type": "play",
+    "song": "Hum Mar Jayenge - Aashiqui 2.mp3",
+    "artist": "Artist Name",
+    "timestamp": "2025-10-31T16:30:48.520Z",
+    "sessionId": "session_1761927501736_e1ne99xla"
+  },
+  {
+    "type": "pause",
+    "song": "Hum Mar Jayenge - Aashiqui 2.mp3",
+    "duration": 42686,
+    "timestamp": "2025-10-31T16:31:31.206Z",
+    "sessionId": "session_1761927501736_e1ne99xla"
+  },
+  {
+    "type": "pause",
+    "song": "Hum Mar Jayenge - Aashiqui 2.mp3",
+    "duration": 105519,
+    "timestamp": "2025-10-31T16:32:34.039Z",
+    "sessionId": "session_1761927501736_e1ne99xla"
+  },
+  {
+    "type": "pause",
+    "song": "Hum Mar Jayenge - Aashiqui 2.mp3",
+    "duration": 115443,
+    "timestamp": "2025-10-31T16:32:43.963Z",
+    "sessionId": "session_1761927501736_e1ne99xla"
+  },
+  {
+    "type": "pause",
+    "song": "Hum Mar Jayenge - Aashiqui 2.mp3",
+    "duration": 116287,
+    "timestamp": "2025-10-31T16:32:44.807Z",
+    "sessionId": "session_1761927501736_e1ne99xla"
+  },
+  {
+    "type": "play",
+    "song": "Azul - Guru Randhawa.mp3",
+    "artist": "Artist Name",
+    "timestamp": "2025-10-31T16:33:23.218Z",
+    "sessionId": "session_1761927501736_e1ne99xla"
+  },
+  {
+    "type": "play",
+    "song": "Hum Mar Jayenge - Aashiqui 2.mp3",
+    "artist": "Artist Name",
+    "timestamp": "2025-10-31T16:33:25.637Z",
+    "sessionId": "session_1761927501736_e1ne99xla"
+  },
+  {
+    "type": "complete",
+    "song": "Hum Mar Jayenge - Aashiqui 2.mp3",
+    "duration": 28592,
+    "timestamp": "2025-10-31T16:33:54.229Z",
+    "sessionId": "session_1761927501736_e1ne99xla"
+  },
+  {
+    "type": "play",
+    "song": "Hum Mar Jayenge - Aashiqui 2.mp3",
+    "artist": "Artist Name",
+    "timestamp": "2025-10-31T16:33:55.918Z",
+    "sessionId": "session_1761927501736_e1ne99xla"
+  },
+  {
+    "type": "pause",
+    "song": "Hum Mar Jayenge - Aashiqui 2.mp3",
+    "duration": 11540,
+    "timestamp": "2025-10-31T16:34:07.458Z",
+    "sessionId": "session_1761927501736_e1ne99xla"
+  },
+  {
+    "type": "play",
+    "song": "52 Bars.mp3",
+    "artist": "Artist Name",
+    "timestamp": "2025-10-31T16:45:26.032Z",
+    "sessionId": "session_1761929123461_m1h2eunxv"
+  },
+  {
+    "type": "skip",
+    "song": "52 Bars.mp3",
+    "duration": 1642,
+    "timestamp": "2025-10-31T16:45:27.674Z",
+    "sessionId": "session_1761929123461_m1h2eunxv"
+  },
+  {
+    "type": "play",
+    "song": "Azul - Guru Randhawa.mp3",
+    "artist": "Artist Name",
+    "timestamp": "2025-10-31T16:45:27.674Z",
+    "sessionId": "session_1761929123461_m1h2eunxv"
+  },
+  {
+    "type": "play",
+    "song": "Azul - Guru Randhawa.mp3",
+    "artist": "Artist Name",
+    "timestamp": "2025-10-31T16:45:29.783Z",
+    "sessionId": "session_1761929123461_m1h2eunxv"
+  },
+  {
+    "type": "pause",
+    "song": "Azul - Guru Randhawa.mp3",
+    "duration": 2286,
+    "timestamp": "2025-10-31T16:45:32.069Z",
+    "sessionId": "session_1761929123461_m1h2eunxv"
+  }
+]
