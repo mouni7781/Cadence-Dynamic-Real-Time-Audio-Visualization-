@@ -1,4 +1,5 @@
 let currsong = new Audio();
+
 let songs
 let currfolder;
 let audioContext, analyser, source, dataArray;
@@ -178,7 +179,6 @@ async function getsongs(folder) {
             throw new Error(`HTTP error! status: ${a.status}`);
         }
         songs = await a.json();
-        console.log('Songs received:', songs);
         if (!songs || songs.length === 0) {
             console.warn(`No songs found in folder: ${folder}`);
             songs = [];
@@ -292,11 +292,11 @@ async function displayalbums(folder, container, cls) {
 }
 
 // ************************************************************************************************** //
-const playmusic = (musictrack, pause = false) => {
+
+const playmusic = async (musictrack, pause = false) => {
     musictrack = decodeURIComponent(musictrack).trim();
     // Construct the path - currfolder should already have the full path
     currsong.src = `Songs/${currfolder}/${encodeURIComponent(musictrack)}`;
-    console.log('Playing:', currsong.src);
     
     if (!pause) {
         currsong.play();
@@ -304,6 +304,7 @@ const playmusic = (musictrack, pause = false) => {
     }
     document.querySelector(".songinfo").innerHTML = decodeURI(musictrack)
     document.querySelector(".songtime").querySelector(".current-time").innerHTML = "00:00";
+   
 }
 
 function init_visualizer(){    
@@ -320,6 +321,7 @@ function init_visualizer(){
     drawVisualizer();
     visualizerInitialized = true;
 }
+
 // ************************************************************************************************** //
 async function main() {
     await displayCards("Songs/TrendSongs", ".sect-a .song-row-container");
@@ -348,6 +350,7 @@ async function main() {
     // Making Previous Button
     prev.addEventListener("click", () => {
         let index = songs.indexOf(decodeURIComponent(currsong.src.split("/").slice(-1)[0]));
+        let currentSongName = decodeURIComponent(currsong.src.split("/").slice(-1)[0]);
         if (index - 1 >= 0) {
             playmusic(songs[index - 1])
         }
@@ -357,6 +360,7 @@ async function main() {
     // Making next Button
     next.addEventListener("click", () => {       
         let index = songs.indexOf(decodeURIComponent(currsong.src.split("/").slice(-1)[0]));
+        let currentSongName = decodeURIComponent(currsong.src.split("/").slice(-1)[0]);
         analytics.trackSkip(currentSongName);
         if (index + 1 < songs.length) {
             playmusic(songs[index + 1])
@@ -375,7 +379,7 @@ async function main() {
         document.querySelector(".songtime .current-time").innerHTML = `${formatTime(currsong.currentTime)}`;
         document.querySelector(".songtime .total-duration").innerHTML = `${formatTime(currsong.duration)}`;
         document.querySelector(".seek").style.left = (currsong.currentTime / currsong.duration) * 100 + "%";
-        document.querySelector(".seekbar").style.setProperty('--progress', `${(currsong.currentTime / currsong.duration) * 100}%`);
+        document.querySelector(".seekbar").style.setProperty('--progress', `${(currsong.currentTime / currsong.duration) * 100}%`);       
     });
 
     // Seekbar control to select diff timeline of the song 
@@ -409,16 +413,14 @@ async function main() {
     Array.from(document.getElementsByClassName("card")).forEach(e => {
         e.addEventListener("click", async items => {
             const folderPath = items.currentTarget.dataset.folder;
-            console.log("Card clicked, folder:", folderPath);
+          
             
             if (folderPath === "TrendSongs") {
                 if (!visualizerInitialized) {
                     init_visualizer();
                 }
                 songs = await getsongs(`Songs/${folderPath}`);
-                console.log("TrendSongs loaded, not auto-playing");
             } else {
-                console.log("Loading album:", folderPath);
                 songs = await getsongs(`Songs/${folderPath}`);
                 
                 if (songs && songs.length > 0) {

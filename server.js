@@ -3,18 +3,16 @@ const fs = require('fs');
 const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
-
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/Songs', express.static(path.join(__dirname, 'Songs')));
 
-
-// # --- ANALYTICS DATA & REAL-TIME UPDATES --- #
+//  ANALYTICS DATA & REAL-TIME UPDATES --- #
 const logFile = path.join(__dirname, 'analytics.json');
 let analyticsData = [];
-let clients = []; // # <-- A list to keep track of all open dashboards
+let clients = []; //  A list to keep track of all open dashboards
 
-// # <-- This function sends a "refresh" message to all open dashboards
+//  This function sends a "refresh" message to all open dashboards
 function sendUpdateToClients() {
     console.log(`Sending update to ${clients.length} clients`);
     clients.forEach(client => {
@@ -25,9 +23,9 @@ function sendUpdateToClients() {
 
 try {
     if (fs.existsSync(logFile)) {
-        // # <-- Read the analytics.json file
+        //  Read the analytics.json file
         const data = fs.readFileSync(logFile, 'utf8');
-        // # <-- Load all the saved data into the analyticsData array
+        //  Load all the saved data into the analyticsData array
         analyticsData = JSON.parse(data);
         console.log(`Successfully loaded ${analyticsData.length} analytics events from ${logFile}.`);
     } else {
@@ -38,31 +36,31 @@ try {
     analyticsData = []; 
 }
 
-// # --- API ENDPOINTS --- #
+//************ API ENDPOINTS ************
 
-// # <-- [POST] Called by script.js every time a song is played, paused, etc.
+//  [POST] Called by script.js every time a song is played, paused, etc.
 app.post('/api/analytics/track', (req, res) => {
     const event = req.body;
     if (!event.timestamp) {
         event.timestamp = new Date().toISOString();
     }
     
-    // # 1. Add new event to our array
+    //  1. Add new event to our array
     analyticsData.push(event);
     
-    // # 2. Save the array back to the file
+    //  2. Save the array back to the file
     fs.writeFile(logFile, JSON.stringify(analyticsData, null, 2), (err) => {
         if (err) console.error('Failed to save analytics:', err);
     });
     
     console.log('Analytics event tracked:', event.type, event.song);
     
-    // # 3. Tell all open dashboards to refresh
+    //  3. Tell all open dashboards to refresh
     sendUpdateToClients();
     res.json({ success: true, message: 'Event tracked' });
 });
 
-// # <-- [GET] This is the special real-time connection for the dashboard
+//  [GET] This is the special real-time connection for the dashboard
 app.get('/api/analytics/events', (req, res) => {
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
@@ -154,7 +152,7 @@ function calculateStats(events) {
 }
 
 app.get('/analytics', (req, res) => {
-    res.sendFile(path.join(__dirname, 'analytics.html'));
+    res.sendFile(path.join(__dirname,'public', 'analytics.html'));
 });
 
 app.get(/^\/api\/songs\/(.+)/, (req, res) => {
@@ -179,8 +177,6 @@ app.get(/^\/api\/songs\/(.+)/, (req, res) => {
     });
 });
 
-
-// # --- START THE SERVER --- #
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
     console.log(`📊 Analytics dashboard: http://localhost:${PORT}/analytics`);

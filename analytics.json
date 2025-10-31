@@ -236,5 +236,89 @@
     "duration": 2286,
     "timestamp": "2025-10-31T16:45:32.069Z",
     "sessionId": "session_1761929123461_m1h2eunxv"
+  },
+  {
+    "type": "play",
+    "song": "52 Bars.mp3",
+    "artist": "Artist Name",
+    "timestamp": "2025-10-31T18:26:37.279Z",
+    "sessionId": "session_1761935180110_56bgikoob"
+  },
+  {
+    "type": "play",
+    "song": "52 Bars.mp3",
+    "artist": "Artist Name",
+    "timestamp": "2025-10-31T18:30:20.409Z",
+    "sessionId": "session_1761935408302_equ7kewvt"
+  },
+  {
+    "type": "pause",
+    "song": "52 Bars.mp3",
+    "duration": 102210,
+    "timestamp": "2025-10-31T18:32:02.619Z",
+    "sessionId": "session_1761935408302_equ7kewvt"
+  },
+  {
+    "type": "play",
+    "song": "52 Bars.mp3",
+    "artist": "Artist Name",
+    "timestamp": "2025-10-31T18:55:50.185Z",
+    "sessionId": "session_1761936782311_0m4ti5sxh"
+  },
+  {
+    "type": "pause",
+    "song": "52 Bars.mp3",
+    "duration": 9642,
+    "timestamp": "2025-10-31T18:55:59.827Z",
+    "sessionId": "session_1761936782311_0m4ti5sxh"
+  },
+  {
+    "type": "play",
+    "song": "52 Bars.mp3",
+    "artist": "Artist Name",
+    "timestamp": "2025-10-31T18:56:00.435Z",
+    "sessionId": "session_1761936782311_0m4ti5sxh"
+  },
+  {
+    "type": "play",
+    "song": "Guzaara - Josh Brar.mp3",
+    "artist": "Artist Name",
+    "timestamp": "2025-10-31T19:12:05.199Z",
+    "sessionId": "session_1761937908324_09m2stwx4"
+  },
+  {
+    "type": "pause",
+    "song": "Guzaara - Josh Brar.mp3",
+    "duration": 592,
+    "timestamp": "2025-10-31T19:12:05.791Z",
+    "sessionId": "session_1761937908324_09m2stwx4"
+  },
+  {
+    "type": "play",
+    "song": "Guzaara - Josh Brar.mp3",
+    "artist": "Artist Name",
+    "timestamp": "2025-10-31T19:12:06.455Z",
+    "sessionId": "session_1761937908324_09m2stwx4"
+  },
+  {
+    "type": "complete",
+    "song": "Guzaara - Josh Brar.mp3",
+    "duration": 236751,
+    "timestamp": "2025-10-31T19:16:03.206Z",
+    "sessionId": "session_1761937908324_09m2stwx4"
+  },
+  {
+    "type": "play",
+    "song": "Tears - Sabrina Carpenter.mp3",
+    "artist": "Artist Name",
+    "timestamp": "2025-10-31T19:20:00.532Z",
+    "sessionId": "session_1761937908324_09m2stwx4"
+  },
+  {
+    "type": "complete",
+    "song": "Tears - Sabrina Carpenter.mp3",
+    "duration": 49104,
+    "timestamp": "2025-10-31T19:20:49.636Z",
+    "sessionId": "session_1761937908324_09m2stwx4"
   }
 ]
