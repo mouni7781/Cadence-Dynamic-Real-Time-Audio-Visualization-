@@ -96,5 +96,6 @@ Run the project with:
 Using **npm**:
 ```sh
 npm start
+```
 
----
+--
