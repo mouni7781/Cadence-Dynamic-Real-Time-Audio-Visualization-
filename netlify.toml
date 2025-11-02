@@ -1,0 +1,20 @@
+[build]
+  # This tells Netlify where your function directory is
+  functions = "netlify/functions/"
+  
+  # This tells Netlify which directory to serve static files from
+  publish = "public/"
+
+# --- ADD THIS ENTIRE BLOCK ---
+# This rule proxies all /api/ requests to your api function
+[[redirects]]
+  # The path your frontend calls
+  from = "/api/*"
+
+  # The actual function to run
+  # :splat is a placeholder for everything after /api/
+  to = "/.netlify/functions/api/:splat"
+  
+  # 200 = a rewrite (proxy), NOT a 301 redirect
+  # This is crucial for APIs.
+  status = 200

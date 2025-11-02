@@ -15,14 +15,9 @@
         content="A fully functional web player for streaming music and discovering new artists.">
     <meta property="og:type" content="website">
 
-    <link rel="stylesheet" href="CSS/Nav-bar.css">
-    <link rel="stylesheet" href="CSS/main.css">
-    <link rel="stylesheet" href="CSS/left.css">
-    <link rel="stylesheet" href="CSS/utility.css">
-    <link rel="stylesheet" href="CSS/C-Scroll.css">
-    <link rel="stylesheet" href="CSS/Songs.css">
+    <link rel="stylesheet" href="CSS/total.css">
     <link rel="stylesheet" href="CSS/mobile.css">
-    <link rel="stylesheet" href="CSS/responsive.css">
+    
 
 </head>
 
@@ -34,17 +29,17 @@
         <div class="left-nav flex  items-center">
             <img id="logo" class="invert" src="/Assets/svg/logo.svg" alt="">
             <div class="flex items-center">
-                <button class="btn-home click">
+                <button class="btn-home click" aria-label="Home">
                     <span id="Home" class="flex items-center justify-center"><img class="invert"
                             src="/Assets/svg/other/Homebtn.svg" alt=""></span>
                 </button>
                 <div class="search-bar flex items-center ">
-                    <button class="btn-search click">
+                    <button class="btn-search click" aria-label="Search">
                         <span id="Home" class="flex items-center justify-center"><img class="invert"
                                 src="/Assets/svg/other/search.svg" alt=""></span>
                     </button>
                     <div class="inp flex items-center">
-                        <input id="search-ph" type="text" placeholder="What do you want to play?">
+                        <input id="search-ph" type="text" placeholder="What do you want to play?" aria-label="What do you want to play?">
                     </div>
                     <button class="btn-browse flex items-center click">
                         <div class="line"></div>
@@ -319,17 +314,17 @@
 
                                 <ul class="list1 flex">
                                     <p class="f716">Company</p>
-                                    <a href="" class="f416 hover-underline text-deco">About</a>
-                                    <a href="" class="f416 hover-underline text-deco">Jobs</a>
-                                    <a href="" class="f416 hover-underline text-deco">For the Record</a>
+                                    <li><a href="" class="f416 hover-underline text-deco">About</a></li>
+                                    <li><a href="" class="f416 hover-underline text-deco">Jobs</a></li>
+                                    <li><a href="" class="f416 hover-underline text-deco">For the Record</a></li>
                                 </ul>
                                 <ul class="list1 flex">
                                     <p class="f716">Communities</p>
-                                    <a href="" class="f416 hover-underline text-deco">For Artists</a>
-                                    <a href="" class="f416 hover-underline text-deco">Developers</a>
-                                    <a href="" class="f416 hover-underline text-deco">Advertising</a>
-                                    <a href="" class="f416 hover-underline text-deco">Investors</a>
-                                    <a href="" class="f416 hover-underline text-deco">Vendors</a>
+                                    <li><a href="" class="f416 hover-underline text-deco">For Artists</a></li>
+                                   <li> <a href="" class="f416 hover-underline text-deco">Developers</a></li>
+                                    <li><a href="" class="f416 hover-underline text-deco">Advertising</a></li>
+                                    <li><a href="" class="f416 hover-underline text-deco">Investors</a></li>
+                                    <li><a href="" class="f416 hover-underline text-deco">Vendors</a></li>
                                 </ul>
                                 <ul class="list1 flex">
                                     <p class="f716">Useful links</p>
@@ -351,19 +346,19 @@
                                 <div class="scont flex items-center justify-center ">
                                     <a href="https://www.instagram.com/mouniprakashh/" target="_blank"
                                         rel="noopener noreferrer" class="">
-                                        <img class="invert" src="/Assets/svg/Socials/ingram.svg" alt="">
+                                        <img class="invert" src="/Assets/svg/Socials/ingram.svg" alt="Mouniprakash on Instagram">
                                         </svg>
                                 </div>
                                 <div class="scont flex items-center justify-center">
                                     <a href="https://x.com/MouniPrakash4?t=fEFGM-yNEm9_bC-mo5ifsg&s=09" target="_blank"
                                         rel="noopener noreferrer" class="">
-                                        <img class="invert" src="/Assets/svg/Socials/twitt.svg" alt="">
+                                        <img class="invert" src="/Assets/svg/Socials/twitt.svg" alt="Mouniprakash on Twitter">
                                         </svg>
                                 </div>
                                 <div class="scont flex items-center justify-center">
                                     <a href="https://www.linkedin.com/in/mouni-prakash-reddy-2091a5258/" target="_blank"
                                         rel="noopener noreferrer" class="">
-                                        <img class="invert" src="/Assets/svg/Socials/linkdin.svg" alt="">
+                                        <img class="invert" src="/Assets/svg/Socials/linkdin.svg" alt="Mouniprakash on LinkedIn">
                                         
                                     </a>
                                 </div>
@@ -397,7 +392,7 @@
                     <div class="volume-cont flex items-center justify-center">
                         <img src="/Assets/svg/Play-btns/volume.svg" alt="">
                         <div class="range">
-                            <input type="range" name="volume" id="vol-range">
+                            <input type="range" name="volume" id="vol-range" aria-label="Volume">
                         </div>
                     </div>
                 </div>
@@ -434,7 +429,7 @@
                     <span>Your Library</span>
                 </div>
                 <div class="Prem pad flex items-center justify-center">
-                    <button class="btn-prem click">
+                    <button class="btn-prem click" aria-label="Premium">
                         <img class="invert" src="/Assets/svg/spot.svg" height="25px" width="25px" alt=""> </button>
                     <span>Premium</span>
                 </div>
@@ -457,7 +452,6 @@
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
-    <script src="lyricsSystem.js"></script>
     <script src="script.js"></script>
 </body>
 

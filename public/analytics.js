@@ -45,9 +45,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const ctx = $('daily-stats-chart').getContext('2d');
     let dailyChart = null;
+    let currentTotals = { totalPlays: 0, uniqueSongs: 0 };
     let currentRange = 'week';
 
-   
+
     async function fetchStats(range = 'week') {
         try {
             // Inlined cache-buster
@@ -64,13 +65,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-  
+
+    // analytics.js
+
     function updateUI(data) {
         statsElements.totalPlays.textContent = data.totalPlays || 0;
         statsElements.totalHours.textContent = data.totalHours || 0;
         statsElements.uniqueSongs.textContent = data.uniqueSongs || 0;
-        // Simplified completion rate update
         statsElements.completionRate.textContent = `${parseFloat(data.completionRate) || 0}%`;
+
+        // Store totals for the 'all' chart
+        currentTotals.totalPlays = data.totalPlays || 0;
+        currentTotals.uniqueSongs = data.uniqueSongs || 0;
 
         statsElements.topSongsList.innerHTML = '';
         if (data.topSongs && data.topSongs.length > 0) {
@@ -83,39 +89,84 @@ document.addEventListener('DOMContentLoaded', () => {
             statsElements.topSongsList.innerHTML = '<li>No song data available.</li>';
         }
 
+        // data.dailyStats will be EMPTY if range is 'all'
         renderChart(data.dailyStats);
     }
+
+    // analytics.js
 
     function renderChart(dailyData) {
         if (dailyChart) {
             dailyChart.destroy();
         }
-        if (!dailyData || dailyData.length === 0) {
-            return;
-        }
-        dailyChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: dailyData.map(d => d.date),
-                datasets: [
-                    {
-                        label: 'Total Plays',
-                        data: dailyData.map(d => d.plays),
-                        backgroundColor: 'rgba(29, 185, 84, 0.7)',
-                        borderColor: 'rgba(29, 185, 84, 1)',
-                        borderWidth: 1
+
+        // Request 1: Handle "all time" range
+        if (currentRange === 'all') {
+            // Render the special two-bar chart
+            dailyChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Total Plays', 'Unique Songs'],
+                    datasets: [
+                        {
+                            label: 'All Time Stats',
+                            data: [currentTotals.totalPlays, currentTotals.uniqueSongs],
+                            backgroundColor: [
+                                'rgba(29, 185, 84, 0.7)', // Green
+                                'rgba(255, 255, 255, 0.7)' // White
+                            ],
+                            borderColor: [
+                                'rgba(29, 185, 84, 1)',
+                                'rgba(255, 255, 255, 1)'
+                            ],
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    ...CHART_OPTIONS, // Use the same base options
+                    scales: { // Override scales
+                        ...CHART_OPTIONS.scales,
+                        x: { // No time-based axis
+                            ticks: { color: 'var(--text-muted)' },
+                            grid: { display: false }
+                        }
                     },
-                    {
-                        label: 'Unique Songs',
-                        data: dailyData.map(d => d.uniqueSongs),
-                        backgroundColor: 'rgba(255, 255, 255, 0.7)',
-                        borderColor: 'rgba(255, 255, 255, 1)',
-                        borderWidth: 1
+                    plugins: { // Override plugins
+                        ...CHART_OPTIONS.plugins,
+                        legend: {
+                            display: false // Hide legend, it's redundant
+                        }
                     }
-                ]
-            },
-            options: CHART_OPTIONS 
-        });
+                }
+            });
+
+        } else {
+            // Render the normal time-series chart for 'week', 'month', 'year'
+            dailyChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: dailyData.map(d => d.date), // Formatted by backend
+                    datasets: [
+                        {
+                            label: 'Total Plays',
+                            data: dailyData.map(d => d.plays),
+                            backgroundColor: 'rgba(29, 185, 84, 0.7)',
+                            borderColor: 'rgba(29, 185, 84, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Unique Songs',
+                            data: dailyData.map(d => d.uniqueSongs),
+                            backgroundColor: 'rgba(255, 255, 255, 0.7)',
+                            borderColor: 'rgba(255, 255, 255, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: CHART_OPTIONS // Use the standard options
+            });
+        }
     }
     function setActiveButton(range) {
         currentRange = range;
@@ -124,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
             rangeButtons[range].classList.add('active');
         }
     }
-   Object.entries(rangeButtons).forEach(([range, button]) => {
+    Object.entries(rangeButtons).forEach(([range, button]) => {
         button.addEventListener('click', () => {
             fetchStats(range);
             setActiveButton(range);

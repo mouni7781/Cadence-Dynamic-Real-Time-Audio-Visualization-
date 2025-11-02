@@ -320,5 +320,19 @@
     "duration": 49104,
     "timestamp": "2025-10-31T19:20:49.636Z",
     "sessionId": "session_1761937908324_09m2stwx4"
+  },
+  {
+    "type": "play",
+    "song": "52 Bars.mp3",
+    "artist": "Artist Name",
+    "timestamp": "2025-11-01T10:06:39.278Z",
+    "sessionId": "session_1761991591295_fmg8defkr"
+  },
+  {
+    "type": "pause",
+    "song": "52 Bars.mp3",
+    "duration": 3411,
+    "timestamp": "2025-11-01T10:06:42.689Z",
+    "sessionId": "session_1761991591295_fmg8defkr"
   }
 ]

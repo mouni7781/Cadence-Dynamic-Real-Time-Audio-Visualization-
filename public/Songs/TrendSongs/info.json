@@ -1,0 +1,51 @@
+[
+  {
+    "name": "52 Bars",
+    "fileName": "52 Bars.mp3",
+    "image": "https://i.scdn.co/image/ab67616d00001e02d036158f4b83af10de8d2443",
+    "artists": [
+      { "name": "Karan Aujla", "href": "#" }
+    ]
+  },
+  {
+    "name": "Azul",
+    "fileName": "Azul - Guru Randhawa.mp3",
+    "image": "https://i.scdn.co/image/ab67616d00001e02203e6495a78184970ab274ac",
+    "artists": [
+      { "name": "Guru Randhawa", "href": "#" }
+    ]
+  },
+  {
+    "name": "Deva Shree Ganesha",
+    "fileName": "Deva Shree Ganesha - Ajay-Atul.mp3",
+    "image": "https://i.scdn.co/image/ab67616d00001e02b22e21de789378f223e1795f",
+    "artists": [
+      { "name": "Ajay-Atul", "href": "#" },
+      { "name": "Ajay Gogavale", "href": "#" }
+    ]
+  },
+  {
+    "name": "For A Reason",
+    "fileName": "For A Reason - Karan Aujla.mp3",
+    "image": "https://i.scdn.co/image/ab67616d00001e023dc5639cb321a69b721bed92",
+    "artists": [
+      { "name": "Karan Aujla", "href": "#" }
+    ]
+  },
+  {
+    "name": "Guzaara",
+    "fileName": "Guzaara - Josh Brar.mp3",
+    "image": "https://i.scdn.co/image/ab67616d00001e020e320aaa87e6f08b7a0f87ef",
+    "artists": [
+      { "name": "Josh Brar", "href": "#" }
+    ]
+  },
+  {
+    "name": "Tears",
+    "fileName": "Tears - Sabrina Carpenter.mp3",
+    "image": "https://i.scdn.co/image/ab67616d00001e0245e9957f1f728941041d3210",
+    "artists": [
+      { "name": "Sabrina Carpenter", "href": "#" }
+    ]
+  }
+]

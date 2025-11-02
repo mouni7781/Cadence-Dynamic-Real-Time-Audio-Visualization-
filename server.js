@@ -1,18 +1,22 @@
 const express = require('express');
-const fs = require('fs');
 const path = require('path');
+const { Pool } = require('pg'); // Import the pg Pool
 const app = express();
-const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/Songs', express.static(path.join(__dirname, 'Songs')));
 
-//  ANALYTICS DATA & REAL-TIME UPDATES --- #
-const logFile = path.join(__dirname, 'analytics.json');
-let analyticsData = [];
-let clients = []; //  A list to keep track of all open dashboards
+// Set up the Neon DB connection pool
+// It automatically uses the DATABASE_URL environment variable
+const pool = new Pool({
+    // connectionString: process.env.DATABASE_URL ,
+    connectionString: process.env.NETLIFY_DATABASE_URL || process.env.DATABASE_URL ,
+    ssl: {
+        rejectUnauthorized: false // Required for Neon
+    }
+});
 
-//  This function sends a "refresh" message to all open dashboards
+// This part stays the same: for real-time dashboard updates
+let clients = []; 
 function sendUpdateToClients() {
     console.log(`Sending update to ${clients.length} clients`);
     clients.forEach(client => {
@@ -21,46 +25,45 @@ function sendUpdateToClients() {
     });
 }
 
-try {
-    if (fs.existsSync(logFile)) {
-        //  Read the analytics.json file
-        const data = fs.readFileSync(logFile, 'utf8');
-        //  Load all the saved data into the analyticsData array
-        analyticsData = JSON.parse(data);
-        console.log(`Successfully loaded ${analyticsData.length} analytics events from ${logFile}.`);
-    } else {
-        console.log('No analytics.json file found, starting with empty data.');
-    }
-} catch (err) {
-    console.error('Error reading or parsing analytics.json:', err);
-    analyticsData = []; 
-}
-
 //************ API ENDPOINTS ************
 
-//  [POST] Called by script.js every time a song is played, paused, etc.
-app.post('/api/analytics/track', (req, res) => {
+// [POST] Called by script.js. Now saves to Postgres.
+app.post('/api/analytics/track', async (req, res) => {
     const event = req.body;
-    if (!event.timestamp) {
-        event.timestamp = new Date().toISOString();
+    
+    const query = `
+        INSERT INTO analytics_events(type, song, artist, duration_ms, session_id, client_timestamp)
+        VALUES($1, $2, $3, $4, $5, $6)
+    `;
+    
+    // Use the timestamp from the client, or default to now if missing
+    const timestamp = event.timestamp || new Date().toISOString();
+    
+    try {
+        await pool.query(query, [
+            event.type,
+            event.song,
+            event.artist,
+            event.duration, // from script.js, renamed to duration_ms in DB
+            event.sessionId,
+            timestamp
+        ]);
+        
+        console.log('Analytics event tracked to DB:', event.type, event.song);
+
+        if (event.type === 'complete' || event.type === 'skip') {
+            sendUpdateToClients();
+            console.log('Finished song event. Sending update to clients.');
+        }
+        res.json({ success: true, message: 'Event tracked' });
+        
+    } catch (err) {
+        console.error('Failed to save analytics to DB:', err);
+        res.status(500).json({ success: false, message: 'DB error' });
     }
-    
-    //  1. Add new event to our array
-    analyticsData.push(event);
-    
-    //  2. Save the array back to the file
-    fs.writeFile(logFile, JSON.stringify(analyticsData, null, 2), (err) => {
-        if (err) console.error('Failed to save analytics:', err);
-    });
-    
-    console.log('Analytics event tracked:', event.type, event.song);
-    
-    //  3. Tell all open dashboards to refresh
-    sendUpdateToClients();
-    res.json({ success: true, message: 'Event tracked' });
 });
 
-//  [GET] This is the special real-time connection for the dashboard
+// [GET] This is the special real-time connection (no change)
 app.get('/api/analytics/events', (req, res) => {
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
@@ -69,115 +72,220 @@ app.get('/api/analytics/events', (req, res) => {
 
     const clientId = Date.now();
     const newClient = { id: clientId, res: res };
-    // # <-- Add the new dashboard (client) to our list
     clients.push(newClient);
     console.log(`Client ${clientId} connected to SSE`);
 
-    // # <-- When the dashboard closes, remove it from the list
     req.on('close', () => {
         console.log(`Client ${clientId} disconnected`);
         clients = clients.filter(client => client.id !== clientId);
     });
 });
 
-app.get('/api/analytics/stats', (req, res) => {
+// [GET] Fetches stats. Now runs SQL queries.
+app.get('/api/analytics/stats', async (req, res) => {
     const range = req.query.range || 'week';
-    const now = Date.now();
-    const ranges = {
-        week: 7 * 24 * 60 * 60 * 1000,
-        month: 30 * 24 * 60 * 60 * 1000,
-        year: 365 * 24 * 60 * 60 * 1000,
-        all: Infinity
-    };
-    
-    const cutoffTime = now - (ranges[range] || ranges.week);
-    
-    const filteredEvents = analyticsData.filter(event => {
-        const eventTime = new Date(event.timestamp).getTime();
-        return eventTime >= cutoffTime;
-    });
-    
-    const stats = calculateStats(filteredEvents);
-    res.json(stats);
+    try {
+        // All calculation logic is moved to the async calculateStats function
+        const stats = await calculateStats(range);
+        res.json(stats);
+    } catch (err) {
+        console.error('Failed to get stats:', err);
+        res.status(500).json({ error: 'Failed to retrieve stats from database.' });
+    }
 });
 
-function calculateStats(events) {
-    const durationEvents = events.filter(e =>
-        e.type === 'complete' ||
-        e.type === 'skip' ||
-        e.type === 'pause'
-    );
-    const playEvents = events.filter(e => e.type === 'play');
-    const completeEvents = events.filter(e => e.type === 'complete');
-    
-    const totalTime = durationEvents.reduce((sum, e) => sum + (e.duration || 0), 0);
-    
-    const songCounts = {};
-    playEvents.forEach(e => {
-        songCounts[e.song] = (songCounts[e.song] || 0) + 1;
-    });
-    
-    const topSongs = Object.entries(songCounts)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 5)
-        .map(([song, count]) => ({ name: song, plays: count }));
-    
-    const dailyStats = {};
-    playEvents.forEach(e => {
-        const date = new Date(e.timestamp).toLocaleDateString();
-        if (!dailyStats[date]) {
-            dailyStats[date] = { plays: 0, songs: new Set() };
-        }
-        dailyStats[date].plays++;
-        dailyStats[date].songs.add(e.song);
-    });
-    
-    let rate = 0;
-    if (playEvents.length > 0) {
-        rate = (completeEvents.length / playEvents.length) * 100;
+// This function now runs all the SQL queries to get stats
+// server.js
+
+// server.js
+
+// server.js
+
+async function calculateStats(range) {
+    let interval;
+    let dateFormat; // Flag for formatting logic
+
+    switch (range) {
+        case 'month': // Request 3: "last month"
+            interval = '30 days';
+            dateFormat = 'custom_week'; // <-- CHANGED from 'week'
+            break;
+        case 'year': // Request 2: "last year"
+            interval = '1 year';
+            dateFormat = 'month'; // Stays the same
+            break;
+        case 'all': // Request 1: "all time"
+            interval = null; 
+            dateFormat = 'all'; // Stays the same
+            break;
+        case 'week': // Request 4: "last week"
+        default:
+            interval = '7 days';
+            dateFormat = 'day'; // Stays the same
     }
 
-    return {
-        totalPlays: playEvents.length,
-        totalHours: (totalTime / (1000 * 60 * 60)).toFixed(1), 
-        uniqueSongs: Object.keys(songCounts).length,
-        topSongs: topSongs,
-        dailyStats: Object.entries(dailyStats).map(([date, data]) => ({
-            date,
-            plays: data.plays,
-            uniqueSongs: data.songs.size
-        })),
-        completionRate: rate.toFixed(1)
-    };
+    // --- Base WHERE clauses (no change) ---
+    const timeFilter = interval 
+        ? `WHERE client_timestamp >= (NOW() - INTERVAL '${interval}')`
+        : '';
+    
+    const playTimeFilter = `
+        WHERE type = 'play'
+        ${interval ? `AND client_timestamp >= (NOW() - INTERVAL '${interval}')` : ''}
+    `;
+    
+    const durationTimeFilter = `
+        WHERE type IN ('pause', 'skip', 'complete')
+        ${interval ? `AND client_timestamp >= (NOW() - INTERVAL '${interval}')` : ''}
+    `;
+
+    // --- SQL Queries (Queries 1, 2, 3, 4, 6 are the same) ---
+    
+    const totalPlaysQuery = `SELECT COUNT(*) FROM analytics_events ${playTimeFilter}`;
+    const totalHoursQuery = `SELECT SUM(duration_ms) AS total_ms FROM analytics_events ${durationTimeFilter}`;
+    const uniqueSongsQuery = `SELECT COUNT(DISTINCT song) FROM analytics_events ${playTimeFilter}`;
+    const topSongsQuery = `
+        SELECT song AS name, COUNT(*) AS plays FROM analytics_events
+        ${playTimeFilter}
+        GROUP BY song
+        ORDER BY plays DESC
+        LIMIT 5
+    `;
+    const completionRateQuery = `
+        SELECT
+            COUNT(CASE WHEN type = 'play' THEN 1 END) AS total_plays,
+            COUNT(CASE WHEN type = 'complete' THEN 1 END) AS total_completes
+        FROM analytics_events
+        ${timeFilter}
+    `;
+
+    // 5. Time-Series Stats (This query logic is now updated)
+    let dailyStatsQuery;
+    if (dateFormat === 'all') {
+        // For 'all', we don't need time-series data.
+        dailyStatsQuery = 'SELECT 1 WHERE 1=0;';
+    
+    // --- THIS BLOCK IS NEW ---
+    } else if (dateFormat === 'custom_week') {
+        // This is the new query for your "Month" view
+        // It uses EXTRACT(DAY ...) and a CASE statement to group by your rules
+        dailyStatsQuery = `
+            SELECT
+                CASE
+                    WHEN EXTRACT(DAY FROM client_timestamp) <= 7 THEN 'Week 1'
+                    WHEN EXTRACT(DAY FROM client_timestamp) <= 14 THEN 'Week 2'
+                    WHEN EXTRACT(DAY FROM client_timestamp) <= 21 THEN 'Week 3'
+                    WHEN EXTRACT(DAY FROM client_timestamp) <= 28 THEN 'Week 4'
+                    ELSE 'Week 5'
+                END AS date,
+                COUNT(*) AS plays,
+                COUNT(DISTINCT song) AS "uniqueSongs"
+            FROM analytics_events
+            ${playTimeFilter}
+            GROUP BY date
+            ORDER BY date ASC
+        `;
+    // --- END NEW BLOCK ---
+
+    } else {
+        // This handles 'week' (day) and 'year' (month)
+        // 'dateFormat' will be 'day' or 'month'
+        const dateTrunc = dateFormat; 
+        dailyStatsQuery = `
+            SELECT
+                DATE_TRUNC('${dateTrunc}', client_timestamp)::DATE AS date,
+                COUNT(*) AS plays,
+                COUNT(DISTINCT song) AS "uniqueSongs"
+            FROM analytics_events
+            ${playTimeFilter}
+            GROUP BY date
+            ORDER BY date ASC
+        `;
+    }
+
+    try {
+        // Run all queries (no change)
+        const [
+            playsResult,
+            hoursResult,
+            uniqueResult,
+            topSongsResult,
+            dailyStatsResult,
+            rateResult
+        ] = await Promise.all([
+            pool.query(totalPlaysQuery),
+            pool.query(totalHoursQuery),
+            pool.query(uniqueSongsQuery),
+            pool.query(topSongsQuery),
+            pool.query(dailyStatsQuery),
+            pool.query(completionRateQuery)
+        ]);
+
+        // --- Process Results (Totals are the same) ---
+
+        const totalPlays = parseInt(playsResult.rows[0].count, 10) || 0;
+        const totalMs = parseInt(hoursResult.rows[0].total_ms, 10) || 0;
+        const totalHours = (totalMs / (1000 * 60 * 60)).toFixed(1);
+        
+        const uniqueSongs = parseInt(uniqueResult.rows[0].count, 10) || 0;
+        
+        const topSongs = topSongsResult.rows;
+
+        let dailyStats = []; 
+
+        // --- THIS PROCESSING LOGIC IS UPDATED ---
+        if (dateFormat !== 'all') {
+            dailyStats = dailyStatsResult.rows.map(row => {
+                
+                // If 'custom_week', the 'date' field is already "Week 1", etc.
+                // The SQL query did all the work.
+                if (dateFormat === 'custom_week') {
+                    return row; // Return the row as-is
+                }
+                
+                // This block handles 'day' and 'month'
+                const date = new Date(row.date);
+                let formattedDate;
+
+                switch (dateFormat) {
+                    case 'month': // For "year" range
+                        formattedDate = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+                        break;
+                    case 'day': // For "week" range
+                    default:
+                        formattedDate = date.toLocaleDateString();
+                }
+                
+                return {
+                    ...row,
+                    date: formattedDate
+                };
+            });
+        }
+        // --- END UPDATED BLOCK ---
+
+        const totalCompletes = parseInt(rateResult.rows[0].total_completes, 10) || 0;
+        const rate = (totalPlays > 0) ? (totalCompletes / totalPlays) * 100 : 0;
+
+        return {
+            totalPlays,
+            totalHours,
+            uniqueSongs,
+            topSongs,
+            dailyStats,
+            completionRate: rate.toFixed(1)
+        };
+
+    } catch (err) {
+        console.error('Error executing stats queries:', err);
+        throw err;
+    }
 }
 
+// Serves the analytics dashboard HTML file
 app.get('/analytics', (req, res) => {
     res.sendFile(path.join(__dirname,'public', 'analytics.html'));
 });
 
-app.get(/^\/api\/songs\/(.+)/, (req, res) => {
-    const subfolder = req.params[0];
-    const folderPath = path.join(__dirname, 'Songs', subfolder);
-
-    if (!fs.existsSync(folderPath)) {
-        console.error('Directory does not exist:', folderPath);
-        return res.status(404).json({ error: 'Folder not found' });
-    }
-
-    fs.readdir(folderPath, (err, files) => {
-        if (err) {
-            console.error("Could not list the directory:", err);
-            return res.status(500).json({ error: 'Server error reading directory' });
-        }
-
-        const mp3Files = files.filter(file => file.endsWith('.mp3'));
-        
-        console.log('Found MP3 files:', mp3Files);
-        res.json(mp3Files);
-    });
-});
-
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-    console.log(`📊 Analytics dashboard: http://localhost:${PORT}/analytics`);
-});
+// Export the app for the Netlify function
+module.exports.app = app;

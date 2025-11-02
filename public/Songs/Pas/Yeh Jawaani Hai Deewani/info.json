@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Badtameez Dil",
+    "fileName": "Badtameez Dil - Yeh Jawaani Hai Deewani.mp3",
+    "image": "https://i.scdn.co/image/ab67616d00001e02707ea5b8023ac77d31756ed4",
+    "artists": [
+      { "name": "Benny Dayal", "href": "#" },
+      { "name": "Shefali Alvares", "href": "#" }
+    ]
+  },
+  {
+    "name": "Kabira",
+    "fileName": "Kabira - Yeh Jawaani Hai Deewani.mp3",
+    "image": "https://i.scdn.co/image/ab67616d00001e02707ea5b8023ac77d31756ed4",
+    "artists": [
+      { "name": "Tochi Raina", "href": "#" },
+      { "name": "Rekha Bhardwaj", "href": "#" }
+    ]
+  }
+]

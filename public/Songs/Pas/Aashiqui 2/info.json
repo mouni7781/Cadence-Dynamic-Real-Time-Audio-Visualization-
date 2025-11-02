@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Hum Mar Jayenge",
+    "fileName": "Hum Mar Jayenge - Aashiqui 2.mp3",
+    "image": "https://i.scdn.co/image/ab67616d00001e026404721c1943d5069f0805f3",
+    "artists": [
+      { "name": "Arijit Singh", "href": "#" },
+      { "name": "Tulsi Kumar", "href": "#" }
+    ]
+  },
+  {
+    "name": "Sunn Raha Hai (Male)",
+    "fileName": "Sunn Raha Hai Male - Aashiqui 2s.mp3",
+    "image": "https://i.scdn.co/image/ab67616d00001e026404721c1943d5069f0805f3",
+    "artists": [
+      { "name": "Ankit Tiwari", "href": "#" }
+    ]
+  },
+  {
+    "name": "Tum Hi Ho",
+    "fileName": "Tum Hi Ho - Aashiqui 2 .mp3",
+    "image": "https://i.scdn.co/image/ab67616d00001e026404721c1943d5069f0805f3",
+    "artists": [
+      { "name": "Arijit Singh", "href": "#" }
+    ]
+  }
+]

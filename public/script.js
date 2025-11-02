@@ -11,18 +11,9 @@ let next = document.querySelector(".next")
 let prev = document.querySelector(".prev")
 let icon = play.querySelector("img");
 
-const songImageMap = {
-    "52 Bars.mp3": "https://i.scdn.co/image/ab67616d00001e02d036158f4b83af10de8d2443",
-    "Azul.mp3": "https://i.scdn.co/image/ab67616d00001e02203e6495a78184970ab274ac",
-    "Deva Shree Ganesha.mp3": "https://i.scdn.co/image/ab67616d00001e02b22e21de789378f223e1795f",
-    "For A Reason.mp3": "https://i.scdn.co/image/ab67616d00001e023dc5639cb321a69b721bed92",
-    "Guzaara.mp3": "https://i.scdn.co/image/ab67616d00001e020e320aaa87e6f08b7a0f87ef",
-    "Tears.mp3": "https://i.scdn.co/image/ab67616d00001e0245e9957f1f728941041d3210",
-};
 const defaultImage = "https://placehold.co/168x168/191919/999999?text=Cover";
-const regex = /\s-\s.*?\./;
 
-
+// ************************************************************************************************** //
 class MusicAnalytics {
     constructor() {
         this.sessionId = this.generateSessionId();
@@ -101,8 +92,20 @@ class MusicAnalytics {
             timestamp: new Date().toISOString(),
             sessionId: this.sessionId
         });
-        this.currentPlay = null;
+        if (this.currentPlay) {
+            this.currentPlay.paused = true;
+        }
         this.playStartTime = null;
+    }
+
+    trackResume(songName) {
+        if (this.currentPlay && this.currentPlay.song === songName && this.currentPlay.paused) {
+            this.playStartTime = Date.now(); 
+            this.currentPlay.paused = false;
+        } 
+        else if (!this.currentPlay || this.currentPlay.song !== songName) {
+            this.trackPlay(songName, 'Artist Name');
+        }
     }
 
     // Send event to backend
@@ -138,6 +141,7 @@ class MusicAnalytics {
 }
 const analytics = new MusicAnalytics();
 // ************************************************************************************************** //
+// Formats time from seconds to a "m:ss" string.
 function formatTime(totalSeconds) {
     if (isNaN(totalSeconds) || totalSeconds < 0) {
         return "0:00";
@@ -147,6 +151,7 @@ function formatTime(totalSeconds) {
     return `${minutes}:${seconds}`;
 }
 // ************************************************************************************************** //
+// Draws the audio visualizer on the canvas.
 function drawVisualizer() {
     requestAnimationFrame(drawVisualizer);
     analyser.getByteFrequencyData(dataArray);
@@ -168,69 +173,117 @@ function drawVisualizer() {
     }
 }
 // ************************************************************************************************** //
-
+// Fetches song data from a folder's info.json.
 async function getsongs(folder) {
-    // Remove 'songs/' or 'Songs/' prefix if present (case insensitive)
-    let subfolder = folder.replace(/^songs\//i, '');
-    currfolder = subfolder;  
+    currfolder = folder;  
     try {
-        let a = await fetch(`/api/songs/${subfolder}`);   
-        if (!a.ok) {
-            throw new Error(`HTTP error! status: ${a.status}`);
+        // Fetch the info.json file directly from the static 'Songs' directory
+        let response = await fetch(`/Songs/${folder}/info.json`);   
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status} for /Songs/${folder}/info.json`);
         }
-        songs = await a.json();
-        if (!songs || songs.length === 0) {
-            console.warn(`No songs found in folder: ${folder}`);
-            songs = [];
+
+        // This is the full array of song objects from info.json
+        let songInfoArray = await response.json(); 
+
+        if (!songInfoArray || songInfoArray.length === 0) {
+            console.warn(`No songs found in info.json for: ${folder}`);
+            songs = []; // Set global 'songs' to empty
+        } else {
+            // Populate the global 'songs' array with *just the filenames*
+            // This is CRITICAL for your Next/Prev buttons to work.
+            songs = songInfoArray.map(song => song.fileName);
         }
-        populatesongs(songs);
-        return songs;
+
+        // Now, pass the *full info* to populatesongs to make the list look better
+        populatesongs(songInfoArray); 
+        
+        return songs; // Return the array of filenames
+
     } catch (error) {
         console.error(`Failed to get songs for ${folder}:`, error);
         songs = []; 
         return songs;
     }
 }
+// ************************************************************************************************** //
 
-// populate available songs in the available section
-async function populatesongs(songs) {
-    let songul = document.querySelector(".songlist").getElementsByTagName("ul")[0]
+// Populates the song list UI from the song info array.
+async function populatesongs(songInfoArray) { 
+    let songul = document.querySelector(".songlist").getElementsByTagName("ul")[0];
     let songsHTML = "";
-    for (const [index, song] of songs.entries()) {    
-        songsHTML += `<li style="animation-delay: ${index * 50}ms;"><img class="invert " height="30px" src="Assets/svg/song/songui.svg" alt="">
-                                    <div class="info">
-                                        <div>${song.replaceAll("%20", " ")}</div>
-                                        <div>Mouni</div>                                        
-                                    </div>
-                                    <div class="playnow flex justify-center items-center">
-                                        <a>Play Now</a>    
-                                        <div class="ply-btn profile-rounded flex items-center justify-center">
-                                                <img src="Assets/svg/other/play.svg" height="24px" width="24px" alt="">
-                                        </div>
-                                    </div>                              
+
+    // Check if we received an empty or invalid array
+    if (!songInfoArray || songInfoArray.length === 0) {
+        songul.innerHTML = "<li>No songs found in this playlist.</li>";
+        return;
+    }
+
+    for (const [index, song] of songInfoArray.entries()) {    
+        // Dynamically get artist names from the object
+        let artistNames = song.artists ? song.artists.map(a => a.name).join(', ') : "Various Artists";
+
+        songsHTML += `<li style="animation-delay: ${index * 50}ms;">
+                            <img class="invert " height="30px" src="Assets/svg/song/songui.svg" alt="">
+                            <div class="info">
+                                <div>${song.name}</div>
+                                <div>${artistNames}</div> 
+                            </div>
+                            <div class="playnow flex justify-center items-center">
+                                <a>Play Now</a>    
+                                <div class="ply-btn profile-rounded flex items-center justify-center">
+                                        <img src="Assets/svg/other/play.svg" height="24px" width="24px" alt="">
+                                </div>
+                            </div>
+                            <span class="song-filename" style="display: none;">${song.fileName}</span>
          </li>`;
         }
     songul.innerHTML = songsHTML;
 
-    // to play song by selecting from available window
+    // Update the click event listener to read the hidden span
     Array.from(document.querySelector(".songlist").getElementsByTagName("li")).forEach(e => {
         e.addEventListener("click", element => {
-            playmusic(e.querySelector(".info").firstElementChild.innerHTML)
+            // Find the hidden span with the filename
+            const fileName = e.querySelector(".song-filename").innerHTML;
+            if (fileName) {
+                // Ensure visualizer is ready
+                if (!visualizerInitialized) {
+                    init_visualizer();
+                }
+                playmusic(fileName);
+            }
         })
     })
 }
+
 // ************************************************************************************************** //
+// Plays a specific song from a card click.
+async function playSongFromCard(folder, songName) {
+    if (!visualizerInitialized) {
+        init_visualizer();
+    }
+    // Update the global context (songs list and current folder)
+    await getsongs(folder); 
+    // Now that context is set, play the specific song
+    playmusic(songName);
+}
+
+// ************************************************************************************************** //
+// Displays song cards in a specific container.
 async function displayCards(folder, container) {
-    let tsongs = await getsongs(folder);
-    folder = folder.replace("Songs/", "");
+    let songsData = await getAlbumFolders(`Songs/${folder}`);
     let card = document.querySelector(container).getElementsByTagName("div")[0]
     let cardsHTML = "";
-    for (const [index, song] of tsongs.entries()) {
-        let imgso = (song.replaceAll("%20", " ")).replace(regex, ".")
-        const imageSrc = songImageMap[imgso] || defaultImage;
+    for (const [index, song] of songsData.entries()) {
+        let artistsHTML = song.artists.map(artist => 
+            `<a class="cfont-ash hover-underline" dir="auto" href="${artist.href || '#'}">${artist.name}</a>`
+        ).join(', ');
+        const imageSrc = song.image || defaultImage;
+
         cardsHTML += `<div data-folder="${folder}" class="card rounded click" style="animation-delay: ${index * 70}ms;">
                                     <div class="card-elements">
-                                        <div class="play-btn profile-rounded flex items-center justify-center" onclick="playmusic('${song}')">
+                                        <div class="play-btn profile-rounded flex items-center justify-center" onclick="playSongFromCard('${folder}', '${song.fileName}')">
                                             <img src="Assets/svg/other/play.svg" height="24px" width="24px" alt="">
                                         </div>
                                         <div class="img-cont rounded">
@@ -238,17 +291,18 @@ async function displayCards(folder, container) {
                                                 src="${imageSrc}"
                                                 style="width: 168px ;height: 168px;padding: 10px;" alt="">
                                         </div>
-                                        <span class="hover-underline f416">${imgso.replaceAll(".mp3", "")}</span>
+                                        <span class="hover-underline f416">${song.name}</span>
                                         <span class="f414">
-                                            <a class="cfont-ash hover-underline" dir="auto" href="">Ajay-Atul</a>,
-                                            <a class="cfont-ash hover-underline" dir="auto" href=""> Ajay Gogavale</a>
+                                            ${artistsHTML}
                                         </span>
                                     </div>
                                 </div>`
     }
     card.innerHTML = cardsHTML;
 }
+
 // ************************************************************************************************** //
+// Fetches the info.json for a given album folder path.
 async function getAlbumFolders(folderPath) {
     const jsonFilePath = `${folderPath}/info.json`;
     try {        
@@ -264,6 +318,8 @@ async function getAlbumFolders(folderPath) {
     }
 }
 
+// ************************************************************************************************** //
+// Displays album cards in a specific container.
 async function displayalbums(folder, container, cls) {
     const defaultImage = "https://placehold.co/168x168/181818/ffffff?text=Album";
     const albumFolders = await getAlbumFolders(folder);
@@ -292,21 +348,29 @@ async function displayalbums(folder, container, cls) {
 }
 
 // ************************************************************************************************** //
-
+// Loads and plays a specific music track.
 const playmusic = async (musictrack, pause = false) => {
     musictrack = decodeURIComponent(musictrack).trim();
-    // Construct the path - currfolder should already have the full path
-    currsong.src = `Songs/${currfolder}/${encodeURIComponent(musictrack)}`;
+    // Construct the path
+    currsong.src = `/Songs/${currfolder}/${encodeURIComponent(musictrack)}`;
     
     if (!pause) {
-        currsong.play();
-        icon.src = "Assets/svg/Play-btns/pause.svg"
+        try {
+            const songName = decodeURIComponent(musictrack);
+            analytics.trackPlay(songName, 'Artist Name');
+
+            await currsong.play();
+            icon.src = "Assets/svg/Play-btns/pause.svg";
+        } catch (error) {
+            console.error('Error playing audio:', error);
+        }
     }
     document.querySelector(".songinfo").innerHTML = decodeURI(musictrack)
     document.querySelector(".songtime").querySelector(".current-time").innerHTML = "00:00";
-   
 }
 
+// ************************************************************************************************** //
+// Initializes the AudioContext and visualizer components.
 function init_visualizer(){    
     audioContext = new (window.AudioContext || window.webkitAudioContext)();
     source = audioContext.createMediaElementSource(currsong);
@@ -324,13 +388,13 @@ function init_visualizer(){
 
 // ************************************************************************************************** //
 async function main() {
-    await displayCards("Songs/TrendSongs", ".sect-a .song-row-container");
+    await displayCards("TrendSongs", ".sect-a .song-row-container");
     await displayalbums("Songs/secb", ".sect-b .song-row-container", "profile-rounded");
     await displayalbums("Songs/Pas", ".sect-c .song-row-container", "img-rounded");
-    await getsongs("Songs/TrendSongs")
+    await getsongs("TrendSongs")
     playmusic(songs[0], true)
 
-    // to play song from song bar
+    // Handle play/pause from the main control bar.
     play.addEventListener("click", () => {
         if (!visualizerInitialized) {
             init_visualizer();
@@ -339,7 +403,7 @@ async function main() {
         if (currsong.paused) {
             currsong.play();
             icon.src = "Assets/svg/Play-btns/pause.svg"
-            analytics.trackPlay(songName, 'Artist Name');
+            analytics.trackResume(songName);
         } else {
             currsong.pause();
             icon.src = "Assets/svg/other/play.svg"
@@ -347,7 +411,7 @@ async function main() {
         }
     });
     
-    // Making Previous Button
+    // Handle 'previous' button click.
     prev.addEventListener("click", () => {
         let index = songs.indexOf(decodeURIComponent(currsong.src.split("/").slice(-1)[0]));
         let currentSongName = decodeURIComponent(currsong.src.split("/").slice(-1)[0]);
@@ -357,24 +421,25 @@ async function main() {
         analytics.trackSkip(currentSongName);
     });
     
-    // Making next Button
+    // Handle 'next' button click.
     next.addEventListener("click", () => {       
         let index = songs.indexOf(decodeURIComponent(currsong.src.split("/").slice(-1)[0]));
         let currentSongName = decodeURIComponent(currsong.src.split("/").slice(-1)[0]);
-        analytics.trackSkip(currentSongName);
+        
         if (index + 1 < songs.length) {
             playmusic(songs[index + 1])
         } else {
             playmusic(songs[0])
         }
+        analytics.trackSkip(currentSongName);
     });
 
-    // Making Volume Control Button
+    // Handle volume control.
     document.querySelector(".range").getElementsByTagName("input")[0].addEventListener("change", (e) => {
         currsong.volume = parseInt(e.target.value) / 100;
     })
 
-    //Update songs time  
+    // Update song time and seek bar.
     currsong.addEventListener("timeupdate", () => {
         document.querySelector(".songtime .current-time").innerHTML = `${formatTime(currsong.currentTime)}`;
         document.querySelector(".songtime .total-duration").innerHTML = `${formatTime(currsong.duration)}`;
@@ -382,20 +447,21 @@ async function main() {
         document.querySelector(".seekbar").style.setProperty('--progress', `${(currsong.currentTime / currsong.duration) * 100}%`);       
     });
 
-    // Seekbar control to select diff timeline of the song 
+    // Handle seek bar click.
     document.querySelector(".seekbar").addEventListener("click", e => {
         let percent = ((e.offsetX / e.target.getBoundingClientRect().width) * 100)
         document.querySelector(".seek").style.left = percent + "%";
         currsong.currentTime = ((currsong.duration) * percent) / 100;
     })
     
+    // Handle hamburger menu click.
     document.querySelector(".ham").addEventListener("click", () => {
         document.querySelector(".left").style.left = "0";
         document.querySelector(".overlay").style.display = "block";
         document.querySelector(".overlay").style.opacity = "1";
     })
 
-    // overlay when the left cont moves in smaller devices
+    // Handle overlay click to close menu.
     document.querySelector(".overlay").addEventListener("click", () => {
         const mediaQuery = window.matchMedia('(max-width: 1249px)');
         if (mediaQuery.matches) {
@@ -410,8 +476,9 @@ async function main() {
         })
     });
 
+    // Add click listeners to album/playlist cards.
     Array.from(document.getElementsByClassName("card")).forEach(e => {
-        e.addEventListener("click", async items => {
+        e.addEventListener("click", async items => {            
             const folderPath = items.currentTarget.dataset.folder;
           
             
@@ -419,9 +486,9 @@ async function main() {
                 if (!visualizerInitialized) {
                     init_visualizer();
                 }
-                songs = await getsongs(`Songs/${folderPath}`);
+                songs = await getsongs(folderPath);
             } else {
-                songs = await getsongs(`Songs/${folderPath}`);
+                songs = await getsongs(folderPath);
                 
                 if (songs && songs.length > 0) {
                     if (!visualizerInitialized) {
@@ -435,7 +502,7 @@ async function main() {
         })
     });
 
-    // search functionality
+    // Handle search functionality.
     const searchInput = document.getElementById('search-ph');
     const browseSections = document.querySelectorAll('.right-main > section');
     const searchResultsContainer = document.getElementById('searchResultsContainer');
@@ -467,7 +534,7 @@ async function main() {
         }
     });
 
-    // scroll cards arrow
+    // Handle horizontal scroll arrows for card sections.
     let rightbtn = document.querySelectorAll(".right-arrow");
     let leftbtn = document.querySelectorAll(".left-arrow");    
     
@@ -490,9 +557,11 @@ async function main() {
             }
         });
     });
+    
+    // Automatically play the next song when one ends.
     currsong.addEventListener('ended', () => {
         const songName = decodeURIComponent(currsong.src.split("/").slice(-1)[0]);
-        analytics.trackComplete(songName);
+        
         
         let index = songs.indexOf(songName);
         if (index + 1 < songs.length) {
@@ -500,6 +569,7 @@ async function main() {
         } else {
             playmusic(songs[0]); 
         }
+        analytics.trackComplete(songName);
     });
 }
 main()

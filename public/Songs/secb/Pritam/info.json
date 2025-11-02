@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Azul",
+    "fileName": "Azul - Guru Randhawa.mp3",
+    "image": "https://i.scdn.co/image/ab67616d00001e02203e6495a78184970ab274ac",
+    "artists": [
+      { "name": "Pritam", "href": "#" },
+      { "name": "Guru Randhawa", "href": "#" }
+    ]
+  },
+  {
+    "name": "Ye Tune Kya Kiya",
+    "fileName": "Ye Tune Kya Kiya.mp3",
+    "image": "https://i.scdn.co/image/ab67616d00001e02e8b066f0b59b97b613f173c3",
+    "artists": [
+      { "name": "Pritam", "href": "#" },
+      { "name": "Javed Bashir", "href": "#" }
+    ]
+  }
+]
