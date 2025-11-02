@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
     "dev": "netlify dev",
-    "deploy": "netlify deploy  deft-peony-525f6e --prod"
+    "deploy": "netlify deploy  mounis-music-player-2025 --prod"
   },
   "keywords": [],
   "author": "",
