@@ -1,6 +1,6 @@
 <div align="center">
 
-# CADENCE-DYNAMIC-REAL-TIME-AUDIO-VISUALIZATION-
+# <h1 style="font-size: 3.5rem; font-weight: 900; letter-spacing: 0.05em;"> CADENCE DYNAMIC REAL TIME AUDIO VISUALIZATION </h1>
 
 <br>
 
@@ -28,3 +28,73 @@
 </p>
 
 </div>
+
+---
+
+## Table of Contents
+
+* [Overview](#overview)
+* [Getting Started](#getting-started)
+    * [Prerequisites](#prerequisites)
+    * [Installation](#installation)
+    * [Usage](#usage)
+    * [Testing](#testing)
+
+---
+
+## Overview
+
+Cadence-Dynamic-Real-Time-Audio-Visualization- is a developer toolkit designed to enable immersive, real-time audio visualizations integrated into web applications. It combines scalable serverless deployment, detailed user interaction analytics, and organized media management to streamline media-rich project development.
+
+### Why Cadence-Dynamic-Real-Time-Audio-Visualization-?
+
+This project aims to simplify the creation of dynamic audio experiences with features including:
+
+* ❇️ **Sparkles:** Real-time audio visualization for engaging media interfaces
+* 🌐 **Globe:** Serverless deployment on Netlify for scalable, maintenance-free hosting
+* 🔨 **Hammer:** Backend API with Express and PostgreSQL for analytics and event tracking
+* 📁 **Folder:** Organized media asset management through JSON catalogs
+* 🚀 **Rocket:** Seamless data migration and analytics workflows for user insights
+* 🎯 **Target:** Easy integration into existing media platforms for enhanced user engagement
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+This project requires the following dependencies:
+
+* **Programming Language:** JavaScript
+* **Package Manager:** Npm
+
+### Installation
+
+Build Cadence-Dynamic-Real-Time-Audio-Visualization- from the source and install dependencies:
+
+1.  **Clone the repository:**
+    ```sh
+    > git clone [https://github.com/mouni7781/Cadence-Dynamic-Real-Time-Audio-Visualization-](https://github.com/mouni7781/Cadence-Dynamic-Real-Time-Audio-Visualization-)
+    ```
+
+2.  **Navigate to the project directory:**
+    ```sh
+    > cd Cadence-Dynamic-Real-Time-Audio-Visualization-
+    ```
+
+3.  **Install the dependencies:**
+
+    Using **npm**:
+    ```sh
+    > npm install
+    ```
+
+## Usage
+
+Run the project with:
+
+Using **npm**:
+```sh
+npm start
+
+---
