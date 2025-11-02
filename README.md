@@ -4,7 +4,7 @@
 
 <br>
 
-_## Transform Sound into Stunning Visuals Instantly_
+### _Transform Sound into Stunning Visuals Instantly_
 
 <br>
 
