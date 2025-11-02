@@ -59,6 +59,35 @@ This project aims to simplify the creation of dynamic audio experiences with fea
 
 ---
 
+## Folder Structure
+
+```
+/
+├── .netlify/                 // Configuration for Netlify hosting
+│   └── functions/            // Serverless functions
+│       └── api.js            // API logic for serverless function
+├── public/                   // All static files visible to the user
+│   ├── Assets/               // Static assets (images, icons)
+│   ├── CSS/                  // All CSS style files
+│   ├── Fonts/                // Font files
+│   ├── Songs/                // Music/audio files
+│   ├── analytics.html        // HTML for the analytics page
+│   ├── analytics.js          // Script for the analytics page
+│   ├── favicon.ico           // Browser tab icon
+│   ├── index.html            // Main application HTML
+│   └── script.js             // Main application logic
+├── .env                      // Environment variables (API keys, secrets)
+├── .gitignore                // Tells Git which files to ignore
+├── analytics.json            // Analytics data file (likely)
+├── migrate.js                // Database migration script (likely)
+├── netlify.toml              // Netlify build & deploy settings
+├── package-lock.json         // Exact versions of dependencies
+├── package.json              // Project dependencies and scripts
+└── server.js                 // Main backend server file (e.g., Express)
+(node_modules/ omitted)       // Installed npm packages
+```
+
+---
 ## Getting Started
 
 ### Prerequisites
@@ -96,6 +125,4 @@ Run the project with:
 Using **npm**:
 ```sh
 npm start
-```
 
---
