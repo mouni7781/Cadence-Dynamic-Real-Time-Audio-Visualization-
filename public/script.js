@@ -2,9 +2,12 @@ let currsong = new Audio();
 
 let songs
 let currfolder;
+let currentPlaylistInfo = [];
 let audioContext, analyser, source, dataArray;
 let canvas, canvasCtx;
 let visualizerInitialized = false;
+let currentTrackInfo = { songName: '', artistName: '' };
+let isBioFetching = false;
 
 let play = document.querySelector(".plybtn");
 let next = document.querySelector(".next")
@@ -141,6 +144,46 @@ class MusicAnalytics {
 }
 const analytics = new MusicAnalytics();
 // ************************************************************************************************** //
+
+async function fetchAndDisplayBio() {
+    // 1. Get elements
+    const popover = document.getElementById('ai-bio-popover');
+    const bioTextElement = document.getElementById('ai-bio-text');
+    
+    // 2. Read from global state
+    const { songName, artistName } = currentTrackInfo;
+
+    // 3. Prevent multiple fetches
+    if (isBioFetching || !songName) return;
+    isBioFetching = true;
+
+    // 4. Show popover with loading state
+    bioTextElement.textContent = 'Loading artist info...';
+    popover.classList.add('show');
+
+    try {
+        const response = await fetch('/api/ai/artist-bio', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ songName, artistName })
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch bio');
+        }
+
+        const data = await response.json();
+        bioTextElement.textContent = data.bio; // 5. Populate with real data
+
+    } catch (error) {
+        console.error('Bio fetch error:', error);
+        bioTextElement.textContent = 'Could not load artist info.'; // 6. Handle error
+    } finally {
+        isBioFetching = false; // 7. Allow fetching again
+    }
+}
+
+// ************************************************************************************************** //
 // Formats time from seconds to a "m:ss" string.
 function formatTime(totalSeconds) {
     if (isNaN(totalSeconds) || totalSeconds < 0) {
@@ -190,10 +233,12 @@ async function getsongs(folder) {
         if (!songInfoArray || songInfoArray.length === 0) {
             console.warn(`No songs found in info.json for: ${folder}`);
             songs = []; // Set global 'songs' to empty
+            currentPlaylistInfo = [];
         } else {
             // Populate the global 'songs' array with *just the filenames*
             // This is CRITICAL for your Next/Prev buttons to work.
             songs = songInfoArray.map(song => song.fileName);
+            currentPlaylistInfo = songInfoArray;
         }
 
         // Now, pass the *full info* to populatesongs to make the list look better
@@ -204,6 +249,7 @@ async function getsongs(folder) {
     } catch (error) {
         console.error(`Failed to get songs for ${folder}:`, error);
         songs = []; 
+        currentPlaylistInfo = [];
         return songs;
     }
 }
@@ -348,17 +394,26 @@ async function displayalbums(folder, container, cls) {
 }
 
 // ************************************************************************************************** //
-// Loads and plays a specific music track.
 const playmusic = async (musictrack, pause = false) => {
     musictrack = decodeURIComponent(musictrack).trim();
-    // Construct the path
     currsong.src = `/Songs/${currfolder}/${encodeURIComponent(musictrack)}`;
-    
+    let artistName = 'Unknown Artist';
+    if (currentPlaylistInfo && currentPlaylistInfo.length > 0) {
+        const songInfo = currentPlaylistInfo.find(song => song.fileName === musictrack);
+        
+        if (songInfo && songInfo.artists && songInfo.artists.length > 0) {
+            artistName = songInfo.artists.map(a => a.name).join(', ');
+        } else if (songInfo) {
+            artistName = 'Various Artists';
+        }
+    }   
+    const songName = decodeURIComponent(musictrack);
+    currentTrackInfo = { songName, artistName };
+    document.getElementById('ai-bio-popover').classList.remove('show');
     if (!pause) {
         try {
             const songName = decodeURIComponent(musictrack);
-            analytics.trackPlay(songName, 'Artist Name');
-
+            analytics.trackPlay(songName, 'Artist Name');           
             await currsong.play();
             icon.src = "Assets/svg/Play-btns/pause.svg";
         } catch (error) {
@@ -393,6 +448,20 @@ async function main() {
     await displayalbums("Songs/Pas", ".sect-c .song-row-container", "img-rounded");
     await getsongs("TrendSongs")
     playmusic(songs[0], true)
+
+    const bioButton = document.getElementById('ai-bio-btn');
+    const bioPopover = document.getElementById('ai-bio-popover');
+    const bioCloseBtn = document.getElementById('ai-bio-close');
+    bioButton.addEventListener('click', () => {
+        if (!bioPopover.classList.contains('show')) {
+            fetchAndDisplayBio();
+        } else {
+            bioPopover.classList.remove('show');
+        }
+    });
+    bioCloseBtn.addEventListener('click', () => {
+        bioPopover.classList.remove('show');
+    });
 
     // Handle play/pause from the main control bar.
     play.addEventListener("click", () => {

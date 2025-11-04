@@ -5,8 +5,16 @@ const app = express();
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Set up the Neon DB connection pool
-// It automatically uses the DATABASE_URL environment variable
+// Add this at the top of server.js
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+
+// Check for API key
+if (!process.env.GEMINI_API_KEY) {
+    console.warn('GEMINI_API_KEY is not set. AI features will be disabled.');
+}
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const aiModel = genAI.getGenerativeModel({ model: "gemini-2.5-flash"});
+
 const pool = new Pool({
     // connectionString: process.env.DATABASE_URL ,
     connectionString: process.env.NETLIFY_DATABASE_URL || process.env.DATABASE_URL ,
@@ -95,11 +103,6 @@ app.get('/api/analytics/stats', async (req, res) => {
 });
 
 // This function now runs all the SQL queries to get stats
-// server.js
-
-// server.js
-
-// server.js
 
 async function calculateStats(range) {
     let interval;
@@ -281,7 +284,29 @@ async function calculateStats(range) {
         throw err;
     }
 }
+app.post('/api/ai/artist-bio', async (req, res) => {
+    if (!process.env.GEMINI_API_KEY) {
+        return res.status(503).json({ error: 'AI service is not configured.' });
+    }
 
+    const { songName, artistName } = req.body;
+
+    if (!artistName) {
+        return res.status(400).json({ error: 'artistName is required' });
+    }
+
+    const prompt = `Write a short, 2-3 sentence biography for the music artist: "${artistName}". They are known for the song "${songName}". Focus on their genre and significance.`;
+
+    try {
+        const result = await aiModel.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text();
+        res.json({ bio: text });
+    } catch (error) {
+        console.error('AI Bio Error:', error);
+        res.status(500).json({ error: 'Failed to generate AI content.' });
+    }
+});
 // Serves the analytics dashboard HTML file
 app.get('/analytics', (req, res) => {
     res.sendFile(path.join(__dirname,'public', 'analytics.html'));

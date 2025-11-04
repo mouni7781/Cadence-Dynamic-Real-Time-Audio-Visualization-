@@ -17,7 +17,7 @@
 
     <link rel="stylesheet" href="CSS/total.css">
     <link rel="stylesheet" href="CSS/mobile.css">
-    
+
 
 </head>
 
@@ -39,7 +39,8 @@
                                 src="/Assets/svg/other/search.svg" alt=""></span>
                     </button>
                     <div class="inp flex items-center">
-                        <input id="search-ph" type="text" placeholder="What do you want to play?" aria-label="What do you want to play?">
+                        <input id="search-ph" type="text" placeholder="What do you want to play?"
+                            aria-label="What do you want to play?">
                     </div>
                     <button class="btn-browse flex items-center click">
                         <div class="line"></div>
@@ -321,7 +322,7 @@
                                 <ul class="list1 flex">
                                     <p class="f716">Communities</p>
                                     <li><a href="" class="f416 hover-underline text-deco">For Artists</a></li>
-                                   <li> <a href="" class="f416 hover-underline text-deco">Developers</a></li>
+                                    <li> <a href="" class="f416 hover-underline text-deco">Developers</a></li>
                                     <li><a href="" class="f416 hover-underline text-deco">Advertising</a></li>
                                     <li><a href="" class="f416 hover-underline text-deco">Investors</a></li>
                                     <li><a href="" class="f416 hover-underline text-deco">Vendors</a></li>
@@ -346,20 +347,23 @@
                                 <div class="scont flex items-center justify-center ">
                                     <a href="https://www.instagram.com/mouniprakashh/" target="_blank"
                                         rel="noopener noreferrer" class="">
-                                        <img class="invert" src="/Assets/svg/Socials/ingram.svg" alt="Mouniprakash on Instagram">
+                                        <img class="invert" src="/Assets/svg/Socials/ingram.svg"
+                                            alt="Mouniprakash on Instagram">
                                         </svg>
                                 </div>
                                 <div class="scont flex items-center justify-center">
                                     <a href="https://x.com/MouniPrakash4?t=fEFGM-yNEm9_bC-mo5ifsg&s=09" target="_blank"
                                         rel="noopener noreferrer" class="">
-                                        <img class="invert" src="/Assets/svg/Socials/twitt.svg" alt="Mouniprakash on Twitter">
+                                        <img class="invert" src="/Assets/svg/Socials/twitt.svg"
+                                            alt="Mouniprakash on Twitter">
                                         </svg>
                                 </div>
                                 <div class="scont flex items-center justify-center">
                                     <a href="https://www.linkedin.com/in/mouni-prakash-reddy-2091a5258/" target="_blank"
                                         rel="noopener noreferrer" class="">
-                                        <img class="invert" src="/Assets/svg/Socials/linkdin.svg" alt="Mouniprakash on LinkedIn">
-                                        
+                                        <img class="invert" src="/Assets/svg/Socials/linkdin.svg"
+                                            alt="Mouniprakash on LinkedIn">
+
                                     </a>
                                 </div>
                             </div>
@@ -373,6 +377,13 @@
                 <canvas id="visualizerCanvas"></canvas>
                 <div class="player-main flex items-center">
                     <div class="songinfo"></div>
+                    <button id="ai-bio-btn" class="click" title="Get Artist Info">Get Info</button>
+
+                    <div id="ai-bio-popover">
+                        <button id="ai-bio-close" class="click" title="Get Artist Info">&times;</button>
+                        <h3>Artist Bio</h3>
+                        <p id="ai-bio-text">Loading...</p>
+                    </div>
                     <div class="songbtns flex items-center justify-center ">
 
                         <div class="prev icon-container profile-rounded flex items-center justify-center">
@@ -388,7 +399,7 @@
                         </div>
                     </div>
                     <div class="placeholder"></div>
-                   
+
                     <div class="volume-cont flex items-center justify-center">
                         <img src="/Assets/svg/Play-btns/volume.svg" alt="">
                         <div class="range">
