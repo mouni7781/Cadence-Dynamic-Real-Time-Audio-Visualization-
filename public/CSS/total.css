@@ -2604,3 +2604,94 @@ input[type="range"] {
         width: 146px;
     }
 }
+/* --- AI Bio Button and Popover Styles (Colorful) --- */
+
+/* 1. Style the Info Button */
+#ai-bio-btn {
+  font-family: 'Times New Roman', Times, serif;
+  font-weight: bold;
+  font-size: 14px;
+  color: greenyellow;
+  background-color: #8A2BE2; 
+  border: 1px solid #FF00FF;
+  border-radius: 10%;
+  width: 54px;
+  height: 34px;
+  line-height: 22px;
+  text-align: center;
+  padding: 0;
+  margin-left: 10px;
+  cursor: pointer;
+  box-shadow: 0 0 8px rgba(138, 43, 226, 0.7);
+  transition: all 0.2s ease;
+}
+
+#ai-bio-btn:hover {
+  background-color: #9932CC;
+  box-shadow: 0 0 12px rgba(255, 0, 255, 0.8);
+  transform: scale(1.1);
+}
+
+/* 2. Style the Popover Window */
+#ai-bio-popover {
+  position: absolute;
+  bottom: 110%; 
+  left: 23%;  
+  width: 300px;
+  
+  /* --- Visuals --- */
+  background: linear-gradient(145deg, #2e0a4d, #1e1e1e 40%);
+  border: 1px solid #8A2BE2;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+  z-index: 100;  
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(10px) scale(0.95);
+  transition: all 0.2s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+/* 3. Style the "Show" state for the popover */
+#ai-bio-popover.show {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* 4. Style the Popover's Close Button */
+#ai-bio-popover #ai-bio-close {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+#ai-bio-popover #ai-bio-close:hover {
+  color: #FF00FF; 
+}
+
+/* 5. Style the Popover Content */
+#ai-bio-popover h3 {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  border-bottom: 1px solid #8A2BE2;
+  padding-bottom: 8px;
+}
+
+#ai-bio-popover #ai-bio-text {
+  font-size: 14px;
+  color: #d1d1d1; 
+  line-height: 1.5;
+  margin-bottom: 0;
+}
